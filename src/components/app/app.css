@@ -1,0 +1,38 @@
+
+:host {
+	display: contents;
+}
+
+:host .wrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+}
+
+:host aside {
+	flex: 0 0 200px;
+	background: var(--color-green);
+}
+
+:host main {
+	flex: 1 0 auto;
+	background: var(--color-red);
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+}
+
+:host ws-outbound-panel {
+	flex: 0 0 200px;
+	background: var(--color-blue);
+}
+
+:host ws-connection-log {
+	flex: 1 0 auto;
+	background: var(--color-yellow);
+}

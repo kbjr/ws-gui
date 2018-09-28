@@ -1,0 +1,48 @@
+
+:root {
+	/* Fonts */
+	--font-heading: Montserrat, sans-serif;
+	--font-sans-serif: Source Sans Pro, Helvetica Neue, Helvetica, sans-serif;
+	--font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+	/* Colors */
+	--color-dark-grey: #131d27;
+	--color-blue: #0275d8;
+	--color-indigo: #6610f2;
+	--color-purple: #613d7c;
+	--color-pink: #ff5b77;
+	--color-red: #d9534f;
+	--color-orange: #f0ad4e;
+	--color-yellow: #ffd500;
+	--color-green: #5cb85c;
+	--color-teal: #5bc0de;
+	--color-cyan: #17a2b8;
+	--color-white: #fff;
+	/*--color-gray: #6c757d;*/
+	/*--color-gray-dark: #343a40;*/
+	/*--primary: #0275d8;*/
+	/*--secondary: #394b5d;*/
+	/*--success: #5cb85c;*/
+	/*--info: #17a2b8;*/
+	/*--warning: #ffd500;*/
+	/*--danger: #d9534f;*/
+	/*--light: #f8f9fa;*/
+	/*--dark: #343a40;*/
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+}
+
+body {
+	position: relative;
+}
