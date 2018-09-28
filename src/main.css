@@ -2,11 +2,13 @@
 :root {
 	/* Fonts */
 	--font-heading: Montserrat, sans-serif;
-	--font-sans-serif: Source Sans Pro, Helvetica Neue, Helvetica, sans-serif;
+	--font-sans-serif: Montserrat, Helvetica Neue, Helvetica, sans-serif;
 	--font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
 	/* Colors */
-	--color-dark-grey: #131d27;
+	--color-grey-1: #131d27;
+	--color-grey-2: #232d38;
+	--color-grey-3: #343a40;
 	--color-blue: #0275d8;
 	--color-indigo: #6610f2;
 	--color-purple: #613d7c;
@@ -19,7 +21,6 @@
 	--color-cyan: #17a2b8;
 	--color-white: #fff;
 	/*--color-gray: #6c757d;*/
-	/*--color-gray-dark: #343a40;*/
 	/*--primary: #0275d8;*/
 	/*--secondary: #394b5d;*/
 	/*--success: #5cb85c;*/

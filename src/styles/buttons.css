@@ -1,0 +1,9 @@
+
+:host button {
+	background-color: var(--color-indigo);
+	padding: 5px 10px;
+	cursor: pointer;
+	color: var(--color-white);
+	font-family: var(--font-sans-serif);
+	border: 1px var(--color-grey-1) solid;
+}

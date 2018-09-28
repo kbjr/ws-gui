@@ -16,12 +16,12 @@
 
 :host aside {
 	flex: 0 0 200px;
-	background: var(--color-green);
+	background: var(--color-grey-2);
+	border-right: 2px var(--color-grey-1) solid;
 }
 
 :host main {
-	flex: 1 0 auto;
-	background: var(--color-red);
+	flex: 1 1 auto;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
@@ -29,10 +29,11 @@
 
 :host ws-outbound-panel {
 	flex: 0 0 200px;
-	background: var(--color-blue);
+	background: var(--color-grey-2);
 }
 
 :host ws-connection-log {
-	flex: 1 0 auto;
-	background: var(--color-yellow);
+	flex: 1 1 auto;
+	background: var(--color-grey-2);
+	overflow: auto;
 }

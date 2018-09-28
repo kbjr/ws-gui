@@ -1,0 +1,9 @@
+
+:host input[type="text"],
+:host textarea {
+	padding: 5px 6px;
+	font-family: var(--font-sans-serif);
+	background: var(--color-grey-1);
+	border: 1px var(--color-grey-3) solid;
+	color: var(--color-white);
+}

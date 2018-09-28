@@ -1,0 +1,25 @@
+
+:host .wrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+
+:host .wrapper div {
+	padding: 10px 5px;
+	font-family: var(--font-monospace);
+}
+
+:host .wrapper .socket-open,
+:host .wrapper .socket-closed {
+	color: var(--color-white);
+}
+
+:host .wrapper .message-out {
+	color: var(--color-green);
+}
+
+:host .wrapper .message-in {
+	color: var(--color-teal);
+}

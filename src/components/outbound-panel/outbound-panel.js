@@ -11,8 +11,13 @@ exports.OutboundPanel = class OutboundPanel extends HTMLElement {
 
 		const _props = {
 			shadow: initShadow(this, {
-				css: loadFile(__dirname, 'outbound-panel.css'),
-				html: loadFile(__dirname, 'outbound-panel.html')
+				html: loadFile(__dirname, 'outbound-panel.html'),
+				css: [
+					loadFile(__dirname, '../../styles/reset.css'),
+					loadFile(__dirname, '../../styles/buttons.css'),
+					loadFile(__dirname, '../../styles/inputs.css'),
+					loadFile(__dirname, 'outbound-panel.css')
+				]
 			})
 		};
 

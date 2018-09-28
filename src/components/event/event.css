@@ -1,0 +1,47 @@
+
+:host {
+	color: var(--color-white);
+	font-family: var(--font-monospace);
+	font-size: 12px;
+}
+
+:host .wrapper {
+	display: flex;
+	flex-direction: row;
+}
+
+:host .meta {
+	flex: 0 0 225px;
+	/*border-left: 1px #fff solid;*/
+	border-right: 1px var(--color-grey-1) solid;
+	padding: 5px;
+}
+
+:host .type,
+:host .time {
+	color: var(--color-white);
+	font-family: var(--font-monospace);
+	font-size: 12px;
+	padding: 2px;
+}
+
+:host([type='socket-open']) .meta {
+	background-color: var(--color-blue);
+}
+
+:host([type='message-out']) .meta {
+	background-color: var(--color-green);
+}
+
+:host([type='message-in']) .meta {
+	background-color: var(--color-grey-3);
+}
+
+:host([type='socket-closed']) .meta {
+	background-color: var(--color-blue);
+}
+
+:host .content {
+	flex: 1 1 auto;
+	padding: 5px;
+}

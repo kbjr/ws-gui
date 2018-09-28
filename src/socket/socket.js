@@ -19,7 +19,7 @@ let testInterval;
  */
 
 exports.Socket = class Socket extends EventEmitter {
-	constructor(url, { highDetail = false } = { }) {
+	constructor(url, { highDetail = true } = { }) {
 		super();
 
 		console.log(`Attempting to open socket url=${url}`);
@@ -61,15 +61,36 @@ exports.Socket = class Socket extends EventEmitter {
 	send(id, message) {
 		const { ws } = props.get(this);
 
+		this.pushToBuffer('message-out', { id, message });
+
 		ws.send(message, (error) => {
 			if (error) {
-				app.send('socket.sendError', { id/*, error*/ });
+				app.send('socket.sendError', { id, error, time: Date.now() });
 			}
 
 			else {
-				app.send('socket.sendSuccess', { id });
+				app.send('socket.sendSuccess', { id, time: Date.now() });
 			}
 		});
+	}
+
+	pushToBuffer(type, attrs) {
+		const _props = props.get(this);
+
+		const event = Object.assign(attrs || { }, {
+			type,
+			time: Date.now()
+		});
+
+		_props.buffer.push(event);
+
+		if (_props.buffer.length >= maxBufferSize) {
+			this.flushBuffer();
+		}
+
+		else if (! _props.bufferTimeout) {
+			_props.bufferTimeout = setTimeout(() => this.flushBuffer(), maxBufferWait);
+		}
 	}
 
 	flushBuffer() {
@@ -81,58 +102,63 @@ exports.Socket = class Socket extends EventEmitter {
 		}
 
 
-		app.send('socket.messages', {
-			messages: _props.buffer.splice(0, _props.buffer.length)
+		app.send('socket.events', {
+			events: _props.buffer.splice(0, _props.buffer.length)
 		});
 	}
 };
 
 const onOpen = (socket) => () => {
 	const time = Date.now();
+	const { url } = props.get(socket);
 
-	console.log('Socket open');
+	console.log(`Socket open url=${url}`);
 
 	app.send('socket.open', { time });
+	socket.pushToBuffer('socket-open', { url });
 
+	// REMOVEME - Test code
 	testInterval = setInterval(() => {
 		console.log('sending test message');
 		socket.send(1, 'test');
 	}, 2000);
 };
 
-const onMessage = (socket) => (data) => {
-	const time = Date.now();
-	const _props = props.get(socket);
-
-	_props.buffer.push({ time, data });
-
-	if (_props.buffer.length >= maxBufferSize) {
-		socket.flushBuffer();
-	}
-
-	else if (! _props.bufferTimeout) {
-		_props.bufferTimeout = setTimeout(() => socket.flushBuffer(), maxBufferWait);
-	}
+const onMessage = (socket) => (message) => {
+	socket.pushToBuffer('message-in', { message });
 };
 
-const onClose = (/*socket*/) => (code, reason) => {
+const onClose = (socket) => (code, reason) => {
+	const { url } = props.get(socket);
+
 	console.log(`Socket closed code=${code} reason=${reason}`);
 
+	socket.pushToBuffer('socket-close', { code, reason, url });
+
+	// REMOVEME - Test code
 	clearInterval(testInterval);
 };
 
-const onError = (/*socket*/) => (error) => {
-	console.log('Socket error encountered');
+const onError = (socket) => (error) => {
+	const { url } = props.get(socket);
+
+	console.log(`Socket error encountered url=${url}`);
 	console.log(error);
+
 	app.send('socket.error', { error });
+	socket.pushToBuffer('socket-error', { error });
 };
 
 const onPing = (socket) => () => {
 	console.log('Recieved ping');
+
+	socket.pushToBuffer('ping');
 };
 
 const onPong = (socket) => () => {
 	console.log('Recieved pong');
+
+	socket.pushToBuffer('pong');
 };
 
 const onUnexpectedResponse = (socket) => (req, res) => {
