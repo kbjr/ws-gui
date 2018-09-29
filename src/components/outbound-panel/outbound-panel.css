@@ -1,6 +1,7 @@
 
 :host .wrapper {
 	padding: 10px;
+	border-bottom: 1px var(--color-grey-1) solid;
 }
 
 :host h1 {
@@ -11,6 +12,10 @@
 
 :host .connection {
 	padding: 10px 0;
+}
+
+:host #url {
+	width: 400px;
 }
 
 :host .send-message {

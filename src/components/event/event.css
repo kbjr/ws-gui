@@ -8,6 +8,7 @@
 :host .wrapper {
 	display: flex;
 	flex-direction: row;
+	border-bottom: 1px var(--color-grey-1) solid;
 }
 
 :host .meta {

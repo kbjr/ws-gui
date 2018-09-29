@@ -5,12 +5,18 @@ const { closeSocketForShutdown } = require('./socket');
 const createWindow = () => {
 	app.window = new BrowserWindow({
 		width: 1200,
-		height: 900
+		height: 900,
+		// frame: false,
+		title: 'WS GUI',
+		// icon: '',
+		webPreferences: {
+			backgroundThrottling: false
+		}
 	});
 
 	app.window.loadFile('src/main.html');
 
-	app.window.webContents.openDevTools({ mode: 'detach' });
+	// app.window.webContents.openDevTools({ mode: 'detach' });
 
 	app.window.on('closed', () => {
 		closeSocketForShutdown();

@@ -7,3 +7,7 @@
 	font-family: var(--font-sans-serif);
 	border: 1px var(--color-grey-1) solid;
 }
+
+:host button[disabled] {
+	opacity: 0.6;
+}

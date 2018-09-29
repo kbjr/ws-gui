@@ -1,12 +1,11 @@
 <div class="wrapper">
 	<h1>WS GUI</h1>
 	<div class="connection">
-		<input type="text" id="url" placeholder="ws://localhost" />
-		<button id="open">Open</button>
-		<button id="close">Close</button>
+		<input type="text" id="url" placeholder="ws://localhost" value="wss://echo.websocket.org" />
+		<button id="open-close">Open</button>
 	</div>
 	<div class="send-message">
-		<textarea id="message"></textarea>
+		<textarea id="message" disabled></textarea>
 		<br />
 		<button id="send">Send</button>
 	</div>

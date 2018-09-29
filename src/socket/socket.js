@@ -10,8 +10,6 @@ const props = new WeakMap();
 const maxBufferSize = 25;
 const maxBufferWait = 50;
 
-let testInterval;
-
 /**
  * Uses `ws.WebSocket` to make the actual outbound connection
  *
@@ -116,12 +114,6 @@ const onOpen = (socket) => () => {
 
 	app.send('socket.open', { time });
 	socket.pushToBuffer('socket-open', { url });
-
-	// REMOVEME - Test code
-	testInterval = setInterval(() => {
-		console.log('sending test message');
-		socket.send(1, 'test');
-	}, 2000);
 };
 
 const onMessage = (socket) => (message) => {
@@ -133,10 +125,8 @@ const onClose = (socket) => (code, reason) => {
 
 	console.log(`Socket closed code=${code} reason=${reason}`);
 
+	app.send('socket.closed', { code, reason });
 	socket.pushToBuffer('socket-close', { code, reason, url });
-
-	// REMOVEME - Test code
-	clearInterval(testInterval);
 };
 
 const onError = (socket) => (error) => {
@@ -166,5 +156,6 @@ const onUnexpectedResponse = (socket) => (req, res) => {
 };
 
 const onUpgrade = (socket) => (res) => {
-	//
+	console.log('Recieved socket upgrade response', res);
+	socket.pushToBuffer('socket-upgrade');
 };

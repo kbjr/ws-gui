@@ -58,10 +58,22 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 			redrawComponent(this, _props);
 		}
 	}
+
+	isScrolledToBottom() {
+		const { scrollTop, scrollHeight, offsetHeight } = this;
+
+		return (scrollTop + offsetHeight) >= scrollHeight;
+	}
 };
 
 const redrawComponent = (connectionLog, _props) => {
+	const isAtBottom = connectionLog.isScrolledToBottom();
+
 	_props.wrapper.innerHTML = _props.frames.join('');
+
+	if (isAtBottom) {
+		connectionLog.scrollTop = connectionLog.scrollHeight;
+	}
 };
 
 const drawFrame = (event) => {
