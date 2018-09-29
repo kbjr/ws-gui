@@ -42,6 +42,10 @@
 	background-color: var(--color-blue);
 }
 
+:host([type='socket-error']) .meta {
+	background-color: var(--color-red);
+}
+
 :host .content {
 	flex: 1 1 auto;
 	padding: 5px;

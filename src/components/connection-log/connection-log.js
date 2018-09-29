@@ -101,5 +101,13 @@ const drawFrame = (event) => {
 			return `<ws-event time="${time}" type="socket-closed">
 				Socket closed url=${event.url} code=${event.code} reason=${event.reason}
 			</ws-event>`;
+
+		case 'socket-error': {
+			const { error } = event;
+
+			return `<ws-event time="${time}" type="socket-error">
+				Socket error url=${event.url} error=${error}
+			</ws-event>`;
+		}
 	}
 };

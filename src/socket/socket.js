@@ -127,6 +127,7 @@ const onClose = (socket) => (code, reason) => {
 
 	app.send('socket.closed', { code, reason });
 	socket.pushToBuffer('socket-close', { code, reason, url });
+	socket.emit('close');
 };
 
 const onError = (socket) => (error) => {
@@ -135,8 +136,8 @@ const onError = (socket) => (error) => {
 	console.log(`Socket error encountered url=${url}`);
 	console.log(error);
 
-	app.send('socket.error', { error });
-	socket.pushToBuffer('socket-error', { error });
+	app.send('socket.error', { error: error.message });
+	socket.pushToBuffer('socket-error', { url, error: error.message });
 };
 
 const onPing = (socket) => () => {
