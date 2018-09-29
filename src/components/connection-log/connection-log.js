@@ -18,6 +18,7 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 
 		const _props = {
 			frames: [ ],
+			undrawnFrames: [ ],
 			needsRedraw: false,
 			redrawDebounce: null,
 			shadow: initShadow(this, {
@@ -39,11 +40,12 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 	}
 
 	onEvents(event, { events }) {
-		const { frames } = props.get(this);
+		const { frames, undrawnFrames } = props.get(this);
 
-		const newFrames = events.map(drawFrame);
+		const newFrames = events.map(processFrames);
 
 		frames.push(...newFrames);
+		undrawnFrames.push(...newFrames);
 		this.redraw();
 	}
 
@@ -66,9 +68,10 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 	}
 
 	clear() {
-		const { frames } = props.get(this);
+		const { frames, wrapper } = props.get(this);
 
 		frames.length = 0;
+		wrapper.innerHTML = '';
 
 		this.redraw();
 	}
@@ -77,37 +80,46 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 const redrawComponent = (connectionLog, _props) => {
 	const isAtBottom = connectionLog.isScrolledToBottom();
 
-	_props.wrapper.innerHTML = _props.frames.join('');
+	_props.undrawnFrames.forEach((frame) => {
+		_props.wrapper.appendChild(frame.node);
+	});
+
+	_props.undrawnFrames.length = 0;
 
 	if (isAtBottom) {
 		connectionLog.scrollTop = connectionLog.scrollHeight;
 	}
 };
 
-const drawFrame = (event) => {
-	const { type, time } = event;
+const processFrames = (event) => {
+	const { time, type } = event;
+
+	const node = document.createElement('ws-event');
+
+	node.setAttribute('time', time);
+	node.setAttribute('type', type);
 
 	switch (type) {
 		case 'socket-open':
-			return `<ws-event time="${time}" type="socket-open">Socket open url=${event.url}</ws-event>`;
+			node.innerHTML = `Socket open url=${event.url}`;
+			break;
 
 		case 'message-out':
-			return `<ws-event time="${time}" type="message-out">${event.message}</ws-event>`;
+			node.innerHTML = event.message;
+			break;
 
 		case 'message-in':
-			return `<ws-event time="${time}" type="message-in">${event.message}</ws-event>`;
+			node.innerHTML = event.message;
+			break;
 
 		case 'socket-close':
-			return `<ws-event time="${time}" type="socket-closed">
-				Socket closed url=${event.url} code=${event.code} reason=${event.reason}
-			</ws-event>`;
+			node.innerHTML = `Socket closed url=${event.url} code=${event.code} reason=${event.reason}`;
+			break;
 
-		case 'socket-error': {
-			const { error } = event;
-
-			return `<ws-event time="${time}" type="socket-error">
-				Socket error url=${event.url} error=${error}
-			</ws-event>`;
-		}
+		case 'socket-error':
+			node.innerHTML = `Socket error url=${event.url} error=${event.error}`;
+			break;
 	}
+
+	return { time, node };
 };

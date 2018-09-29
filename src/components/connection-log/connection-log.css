@@ -12,7 +12,7 @@
 }
 
 :host .wrapper .socket-open,
-:host .wrapper .socket-closed {
+:host .wrapper .socket-close {
 	color: var(--color-white);
 }
 

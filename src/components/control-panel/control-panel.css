@@ -5,12 +5,6 @@
 	position: relative;
 }
 
-:host h1 {
-	font-family: var(--font-heading);
-	font-weight: 500;
-	color: var(--color-white);
-}
-
 :host .connection {
 	padding: 10px 0;
 }

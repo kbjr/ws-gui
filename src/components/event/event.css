@@ -38,7 +38,7 @@
 	background-color: var(--color-grey-3);
 }
 
-:host([type='socket-closed']) .meta {
+:host([type='socket-close']) .meta {
 	background-color: var(--color-blue);
 }
 
