@@ -1,2 +1,2 @@
 
-exports.appRoot = document.querySelector('ws-app-root');
+exports.appRoot = () => document.querySelector('ws-app-root');

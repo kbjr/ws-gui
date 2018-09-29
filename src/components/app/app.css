@@ -27,7 +27,7 @@
 	flex-wrap: nowrap;
 }
 
-:host ws-outbound-panel {
+:host ws-control-panel {
 	flex: 0 0 200px;
 	background: var(--color-grey-2);
 }

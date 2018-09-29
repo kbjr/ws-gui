@@ -64,6 +64,14 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 
 		return (scrollTop + offsetHeight) >= scrollHeight;
 	}
+
+	clear() {
+		const { frames } = props.get(this);
+
+		frames.length = 0;
+
+		this.redraw();
+	}
 };
 
 const redrawComponent = (connectionLog, _props) => {

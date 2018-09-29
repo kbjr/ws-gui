@@ -19,7 +19,7 @@ exports.AppRoot = class AppRoot extends HTMLElement {
 		};
 
 		_props.sidebar = _props.shadow.querySelector('ws-sidebar');
-		_props.outboundPanel = _props.shadow.querySelector('ws-outbound-panel');
+		_props.controlPanel = _props.shadow.querySelector('ws-control-panel');
 		_props.connectionLog = _props.shadow.querySelector('ws-connection-log');
 
 		props.set(this, _props);
@@ -29,8 +29,8 @@ exports.AppRoot = class AppRoot extends HTMLElement {
 		return props.get(this).sidebar;
 	}
 
-	get outboundPanel() {
-		return props.get(this).outboundPanel;
+	get controlPanel() {
+		return props.get(this).controlPanel;
 	}
 
 	get connectionLog() {

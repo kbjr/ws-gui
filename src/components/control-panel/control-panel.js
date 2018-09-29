@@ -2,24 +2,25 @@
 const { loadFile } = require('../../utils/load-file');
 const { initShadow } = require('../../utils/init-shadow');
 const { ipcRenderer } = require('electron');
+const { appRoot } = require('../../renderer');
 
 const props = new WeakMap();
 
 let nextMessageId = 1;
 
-exports.OutboundPanel = class OutboundPanel extends HTMLElement {
+exports.ControlPanel = class ControlPanel extends HTMLElement {
 	constructor() {
 		super();
 
 		const _props = {
 			state: 'closed',
 			shadow: initShadow(this, {
-				html: loadFile(__dirname, 'outbound-panel.html'),
+				html: loadFile(__dirname, 'control-panel.html'),
 				css: [
 					loadFile(__dirname, '../../styles/reset.css'),
 					loadFile(__dirname, '../../styles/buttons.css'),
 					loadFile(__dirname, '../../styles/inputs.css'),
-					loadFile(__dirname, 'outbound-panel.css')
+					loadFile(__dirname, 'control-panel.css')
 				]
 			})
 		};
@@ -29,12 +30,16 @@ exports.OutboundPanel = class OutboundPanel extends HTMLElement {
 		_props.openCloseButton = _props.shadow.querySelector('#open-close');
 		_props.messageTextarea = _props.shadow.querySelector('#message');
 		_props.sendButton = _props.shadow.querySelector('#send');
+		_props.clearOutputButton = _props.shadow.querySelector('#clear-output');
 
 		// Bind the open/close socket button event
 		_props.openCloseButton.addEventListener('click', () => this.toggleOpen());
 
 		// Bind the send message button event
 		_props.sendButton.addEventListener('click', () => this.sendMessage());
+
+		// Bind the clear output button event
+		_props.clearOutputButton.addEventListener('click', () => this.clearOutput());
 
 		// Bind the on open event
 		ipcRenderer.on('socket.open', () => {
@@ -88,5 +93,9 @@ exports.OutboundPanel = class OutboundPanel extends HTMLElement {
 			id: nextMessageId++,
 			message: _props.messageTextarea.value
 		});
+	}
+
+	clearOutput() {
+		appRoot().connectionLog.clear();
 	}
 };
