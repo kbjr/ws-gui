@@ -6,9 +6,9 @@
 	align-items: stretch;
 }
 
-:host .wrapper div {
-	padding: 10px 5px;
+:host .wrapper ws-event {
 	font-family: var(--font-monospace);
+	min-width: 50%;
 }
 
 :host .wrapper .socket-open,
