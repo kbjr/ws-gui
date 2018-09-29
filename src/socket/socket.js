@@ -22,7 +22,8 @@ exports.Socket = class Socket extends EventEmitter {
 
 		console.log(`Attempting to open socket url=${url}`);
 
-		const ws = new WebSocket(url);
+		// TODO - Find a better way to handle this (rejectUnauthorized) while notifying the user of what happened
+		const ws = new WebSocket(url, { rejectUnauthorized: false });
 
 		ws.on('open', onOpen(this));
 		ws.on('message', onMessage(this));
