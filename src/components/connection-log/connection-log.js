@@ -2,15 +2,11 @@
 const { loadFile } = require('../../utils/load-file');
 const { initShadow } = require('../../utils/init-shadow');
 const { ipcRenderer } = require('electron');
+const { Frame } = require('./frame');
 
 const props = new WeakMap();
 
-//
-// TODO
-//   - Implement render buffering
-//   - Implement view virtualization
-//   - UI prettifying
-//
+const redrawDebounceInterval = 100;
 
 exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 	constructor() {
@@ -42,7 +38,7 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 	onEvents(event, { events }) {
 		const { frames, undrawnFrames } = props.get(this);
 
-		const newFrames = events.map(processFrames);
+		const newFrames = events.map((event) => new Frame(event));
 
 		frames.push(...newFrames);
 		undrawnFrames.push(...newFrames);
@@ -54,6 +50,9 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 
 		if (_props.redrawDebounce) {
 			_props.needsRedraw = true;
+
+			// Hint to the browser that we're about to change the contents
+			this.style.willChange = 'content';
 		}
 
 		else {
@@ -78,6 +77,9 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 };
 
 const redrawComponent = (connectionLog, _props) => {
+	_props.redrawDebounce = true;
+	_props.needsRedraw = false;
+
 	const isAtBottom = connectionLog.isScrolledToBottom();
 
 	_props.undrawnFrames.forEach((frame) => {
@@ -89,37 +91,15 @@ const redrawComponent = (connectionLog, _props) => {
 	if (isAtBottom) {
 		connectionLog.scrollTop = connectionLog.scrollHeight;
 	}
-};
 
-const processFrames = (event) => {
-	const { time, type } = event;
+	// We're done redrawing, we can remove the render hint
+	connectionLog.style.willChange = 'auto';
 
-	const node = document.createElement('ws-event');
+	setTimeout(() => {
+		_props.redrawDebounce = false;
 
-	node.setAttribute('time', time);
-	node.setAttribute('type', type);
-
-	switch (type) {
-		case 'socket-open':
-			node.innerHTML = `Socket open url=${event.url}`;
-			break;
-
-		case 'message-out':
-			node.innerHTML = event.message;
-			break;
-
-		case 'message-in':
-			node.innerHTML = event.message;
-			break;
-
-		case 'socket-close':
-			node.innerHTML = `Socket closed url=${event.url} code=${event.code} reason=${event.reason}`;
-			break;
-
-		case 'socket-error':
-			node.innerHTML = `Socket error url=${event.url} error=${event.error}`;
-			break;
-	}
-
-	return { time, node };
+		if (_props.needsRedraw) {
+			connectionLog.redraw();
+		}
+	}, redrawDebounceInterval);
 };

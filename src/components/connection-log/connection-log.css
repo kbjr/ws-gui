@@ -4,6 +4,7 @@
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: stretch;
+	/*transform: translate3d(0,0,0);*/
 }
 
 :host .wrapper ws-event {
