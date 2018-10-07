@@ -2,6 +2,7 @@
 const WebSocket = require('ws');
 const { app } = require('electron');
 const EventEmitter = require('events');
+const { formatJson } = require('../utils/prism');
 
 const props = new WeakMap();
 
@@ -9,6 +10,9 @@ const props = new WeakMap();
 // large numbers of messages
 const maxBufferSize = 25;
 const maxBufferWait = 50;
+
+// Should messages be syntax highlighted?
+const highlightMessages = true;
 
 /**
  * Uses `ws.WebSocket` to make the actual outbound connection
@@ -60,7 +64,7 @@ exports.Socket = class Socket extends EventEmitter {
 	send(id, message) {
 		const { ws } = props.get(this);
 
-		this.pushToBuffer('message-out', { id, message });
+		this.pushToBuffer('message-out', { id, message, isJson: isJson(message) });
 
 		ws.send(message, (error) => {
 			if (error) {
@@ -100,10 +104,17 @@ exports.Socket = class Socket extends EventEmitter {
 			_props.bufferTimeout = null;
 		}
 
+		const events = _props.buffer.splice(0, _props.buffer.length);
 
-		app.send('socket.events', {
-			events: _props.buffer.splice(0, _props.buffer.length)
-		});
+		if (highlightMessages) {
+			events.forEach((event) => {
+				if (event.message && event.isJson) {
+					event.formatted = formatJson(event.message);
+				}
+			});
+		}
+
+		app.send('socket.events', { events });
 	}
 };
 
@@ -118,7 +129,7 @@ const onOpen = (socket) => () => {
 };
 
 const onMessage = (socket) => (message) => {
-	socket.pushToBuffer('message-in', { message });
+	socket.pushToBuffer('message-in', { message, isJson: isJson(message) });
 };
 
 const onClose = (socket) => (code, reason) => {
@@ -160,4 +171,16 @@ const onUnexpectedResponse = (socket) => (req, res) => {
 const onUpgrade = (socket) => (res) => {
 	console.log('Recieved socket upgrade response', res);
 	socket.pushToBuffer('socket-upgrade');
+};
+
+const isJson = (message) => {
+	try {
+		JSON.parse(message);
+	}
+
+	catch (error) {
+		return false;
+	}
+
+	return true;
 };

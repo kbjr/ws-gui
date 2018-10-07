@@ -27,11 +27,11 @@ exports.Frame = class Frame {
 				break;
 
 			case 'message-out':
-				this.node.innerHTML = event.message;
+				this.node.innerHTML = event.formatted ? `<pre>${event.formatted}</pre>` : event.message;
 				break;
 
 			case 'message-in':
-				this.node.innerHTML = event.message;
+				this.node.innerHTML = event.formatted ? `<pre>${event.formatted}</pre>` : event.message;
 				break;
 
 			case 'socket-close':
@@ -47,7 +47,8 @@ exports.Frame = class Frame {
 
 		props.set(this, {
 			height: null,
-			isJson: null
+			isJson: event.isJson,
+			isFormatted: event.formatted != null
 		});
 	}
 
@@ -68,19 +69,10 @@ exports.Frame = class Frame {
 	}
 
 	get isJson() {
-		const _props = props.get(this);
+		return props.get(this).isJson;
+	}
 
-		if (this.message && _props.isJson == null) {
-			try {
-				JSON.parse(this.message);
-				_props.isJson = true;
-			}
-
-			catch (error) {
-				_props.isJson = false;
-			}
-		}
-
-		return _props.isJson;
+	get isFormatted() {
+		return props.get(this).isFormatted;
 	}
 };

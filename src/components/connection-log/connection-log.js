@@ -21,7 +21,8 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 				html: loadFile(__dirname, 'connection-log.html'),
 				css: [
 					loadFile(__dirname, '../../styles/reset.css'),
-					loadFile(__dirname, 'connection-log.css')
+					loadFile(__dirname, 'connection-log.css'),
+					loadFile(__dirname, 'prism.css')
 				]
 			})
 		};
