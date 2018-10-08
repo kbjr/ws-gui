@@ -28,6 +28,14 @@ exports.Event = class Event extends HTMLElement {
 		props.set(this, _props);
 	}
 
+	get index() {
+		return props.get(this).index;
+	}
+
+	set index(value) {
+		props.get(this).index = value;
+	}
+
 	attributeChangedCallback(name, oldValue, newValue) {
 		const _props = props.get(this);
 

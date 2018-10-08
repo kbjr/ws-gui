@@ -7,8 +7,14 @@
 
 :host .wrapper {
 	display: flex;
+	height: 47px;
 	flex-direction: row;
 	border-bottom: 1px var(--color-grey-1) solid;
+}
+
+:host([type='message-out']) .wrapper,
+:host([type='message-in']) .wrapper {
+	height: 65px;
 }
 
 :host .meta {
@@ -55,16 +61,11 @@
 ::slotted(pre) {
 	font-family: var(--font-monospace);
 	text-align: left;
-	white-space: pre;
+	/*white-space: pre;
 	word-spacing: normal;
 	word-break: normal;
-	word-wrap: normal;
+	word-wrap: normal;*/
 	line-height: 1.5;
-	-moz-tab-size: 4;
-	-o-tab-size: 4;
 	tab-size: 4;
-	-webkit-hyphens: none;
-	-moz-hyphens: none;
-	-ms-hyphens: none;
 	hyphens: none;
 }

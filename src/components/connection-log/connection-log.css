@@ -1,15 +1,21 @@
 
 :host .wrapper {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: stretch;
+	display: block;
+	width: 100%;
 	/*transform: translate3d(0,0,0);*/
+}
+
+:host .upper-buffer,
+:host .lower-buffer {
+	display: block;
+	content: ' ';
+	width: 100%;
+	height: 0;
 }
 
 :host .wrapper ws-event {
 	font-family: var(--font-monospace);
-	min-width: 50%;
+	width: 100%;
 }
 
 :host .wrapper .socket-open,

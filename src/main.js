@@ -10,7 +10,8 @@ const createWindow = () => {
 		title: 'WS GUI',
 		// icon: '',
 		webPreferences: {
-			backgroundThrottling: false
+			backgroundThrottling: false,
+			textAreasAreResizable: false
 		}
 	});
 

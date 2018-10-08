@@ -1,11 +1,13 @@
 
-exports.debounce = (ms, func) => {
+exports.debounce = (ms, func, onDebounce) => {
 	let timeout;
+	let lastArgs;
 	let needsCall = false;
 
 	const call = () => {
-		func();
+		func(...lastArgs);
 
+		lastArgs = null;
 		needsCall = false;
 		timeout = setTimeout(afterDebounce, ms);
 	};
@@ -18,13 +20,19 @@ exports.debounce = (ms, func) => {
 		}
 	};
 
-	return () => {
+	return (...args) => {
+		lastArgs = args;
+
 		if (! timeout) {
 			call();
 		}
 
 		else {
 			needsCall = true;
+
+			if (onDebounce) {
+				onDebounce();
+			}
 		}
 	};
 };
