@@ -29,13 +29,13 @@
   },
   "homepage": "https://github.com/kbjr/ws-gui#readme",
   "dependencies": {
+    "prismjs": "^1.15.0",
     "ws": "^6.0.0"
   },
   "devDependencies": {
     "electron": "^3.0.0",
     "electron-builder": "^20.28.4",
     "eslint": "^5.6.0",
-    "prismjs": "^1.15.0",
     "rimraf": "^2.6.2"
   },
   "build": {
