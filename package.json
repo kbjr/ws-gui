@@ -1,6 +1,6 @@
 {
   "name": "ws-gui",
-  "version": "0.0.7-alpha",
+  "version": "0.0.8-alpha",
   "description": "An Electron based WebSocket client",
   "main": "src/main.js",
   "scripts": {
