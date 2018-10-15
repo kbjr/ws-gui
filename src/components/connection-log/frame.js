@@ -33,7 +33,7 @@ exports.Frame = class Frame {
 	reset() {
 		const _props = props.get(this);
 
-		_props.height = this.isDrawn ? _props.node.offsetHeight : null;
+		_props.height = null;
 	}
 
 	get height() {
@@ -49,7 +49,7 @@ exports.Frame = class Frame {
 						recalculateCharSize();
 					}
 
-					this.event.formatted.split('\n').forEach((line) => {
+					this.event.message.split('\n').forEach((line) => {
 						// Array.from is used here to split into actual characters (not code points) before
 						// checking the string length
 						lines += Math.ceil(Array.from(line).length / charSize.cols);

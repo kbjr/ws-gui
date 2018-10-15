@@ -44,9 +44,10 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 
 		this.onEvents = this.onEvents.bind(this);
 		this.redraw = debounce(redrawDebounceInterval, this.redraw.bind(this), this.onDebouncedRedraw.bind(this));
+		this.completeRedraw = debounce(redrawDebounceInterval, this.completeRedraw.bind(this));
 
 		// Add all of the event listeners waiting for input to redraw
-		renderer.on('resize', this.redraw);
+		renderer.on('resize', this.completeRedraw);
 		this.addEventListener('scroll', this.redraw);
 		ipcRenderer.on('socket.events', this.onEvents);
 
@@ -64,6 +65,13 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 	onDebouncedRedraw() {
 		// Hint to the browser that we're about to change the contents
 		this.style.willChange = 'content';
+	}
+
+	// This clears out the existing height calculations before redrawing
+	completeRedraw() {
+		props.get(this).frames.forEach((frame) => {
+			frame.reset();
+		});
 	}
 
 	redraw() {
@@ -152,10 +160,12 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 	}
 
 	clear() {
-		const { frames, content } = props.get(this);
+		const { frames, content, upperBuffer, lowerBuffer } = props.get(this);
 
 		frames.length = 0;
 		content.innerHTML = '';
+		upperBuffer.style.height = '0px';
+		lowerBuffer.style.height = '0px';
 	}
 };
 
