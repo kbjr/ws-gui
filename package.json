@@ -43,7 +43,7 @@
   "build": {
     "appId": "com.electron.ws-gui",
     "compression": "maximum",
-    "publish": [ "never" ],
+    "publish": [ ],
     "win": {
       "target": [
         { "target": "nsis", "arch": [ "x64", "ia32" ] }
