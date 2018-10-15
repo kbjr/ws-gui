@@ -3,6 +3,10 @@ const props = new WeakMap();
 
 let index = 1;
 
+const heightPerLine = 18;
+const frameMinHeight = 47;
+const frameHeightPadding = 10;
+
 exports.Frame = class Frame {
 	constructor(event) {
 		const { time, type } = event;
@@ -33,12 +37,16 @@ exports.Frame = class Frame {
 		if (! _props.height) {
 			switch (this.type) {
 				case 'message-in':
-				case 'message-out':
-					_props.height = 65;
+				case 'message-out': {
+					const lines = this.event.formatted.split('\n').length;
+					const contentHeight = lines * heightPerLine + frameHeightPadding;
+
+					_props.height = Math.max(contentHeight, frameMinHeight);
 					break;
+				}
 
 				default:
-					_props.height = 47;
+					_props.height = frameMinHeight;
 					break;
 			}
 		}

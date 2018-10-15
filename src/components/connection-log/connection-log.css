@@ -30,3 +30,12 @@
 :host .wrapper .message-in {
 	color: var(--color-teal);
 }
+
+:host .wrapper ws-event pre {
+	font-family: var(--font-monospace);
+	text-align: left;
+	white-space: pre-wrap;
+	line-height: 1.5;
+	tab-size: 4;
+	hyphens: none;
+}

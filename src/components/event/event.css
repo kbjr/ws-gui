@@ -7,14 +7,8 @@
 
 :host .wrapper {
 	display: flex;
-	height: 47px;
 	flex-direction: row;
 	border-bottom: 1px var(--color-grey-1) solid;
-}
-
-:host([type='message-out']) .wrapper,
-:host([type='message-in']) .wrapper {
-	height: 65px;
 }
 
 :host .meta {
@@ -56,16 +50,5 @@
 	flex: 1 1 auto;
 	padding: 5px;
 	word-break: break-all;
-}
-
-::slotted(pre) {
-	font-family: var(--font-monospace);
-	text-align: left;
-	/*white-space: pre;
-	word-spacing: normal;
-	word-break: normal;
-	word-wrap: normal;*/
 	line-height: 1.5;
-	tab-size: 4;
-	hyphens: none;
 }

@@ -3,6 +3,7 @@ const WebSocket = require('ws');
 const { app } = require('electron');
 const EventEmitter = require('events');
 const { formatJson } = require('../utils/prism');
+const { escapeHtml } = require('../utils/escape-html');
 
 const props = new WeakMap();
 
@@ -108,8 +109,22 @@ exports.Socket = class Socket extends EventEmitter {
 
 		if (highlightMessages) {
 			events.forEach((event) => {
-				if (event.message && event.isJson) {
-					event.formatted = formatJson(event.message);
+				if (event.message) {
+					if (event.isJson) {
+						event.formatted = formatJson(event.message);
+					}
+
+					else {
+						event.formatted = escapeHtml(event.message);
+					}
+				}
+			});
+		}
+
+		else {
+			events.forEach((event) => {
+				if (event.message) {
+					event.formatted = escapeHtml(event.message);
 				}
 			});
 		}
