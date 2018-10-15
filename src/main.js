@@ -6,6 +6,8 @@ const createWindow = () => {
 	app.window = new BrowserWindow({
 		width: 1200,
 		height: 900,
+		minWidth: 600,
+		minHeight: 700,
 		// frame: false,
 		title: 'WS GUI',
 		// icon: '',

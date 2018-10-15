@@ -1,10 +1,15 @@
 
+const { charSize, recalculateCharSize } = require('../../utils/char-size');
+
 const props = new WeakMap();
 
 let index = 1;
 
-const heightPerLine = 18;
+// The minimum height at which to render any frame
 const frameMinHeight = 47;
+
+// The amount of extra padding added vertically around the pre that render content. This is used
+// when calculating the height of a rendered frame
 const frameHeightPadding = 10;
 
 exports.Frame = class Frame {
@@ -38,8 +43,19 @@ exports.Frame = class Frame {
 			switch (this.type) {
 				case 'message-in':
 				case 'message-out': {
-					const lines = this.event.formatted.split('\n').length;
-					const contentHeight = lines * heightPerLine + frameHeightPadding;
+					let lines = 0;
+
+					if (! charSize.width) {
+						recalculateCharSize();
+					}
+
+					this.event.formatted.split('\n').forEach((line) => {
+						// Array.from is used here to split into actual characters (not code points) before
+						// checking the string length
+						lines += Math.ceil(Array.from(line).length / charSize.cols);
+					});
+
+					const contentHeight = lines * charSize.height + frameHeightPadding;
 
 					_props.height = Math.max(contentHeight, frameMinHeight);
 					break;

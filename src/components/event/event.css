@@ -2,7 +2,7 @@
 :host {
 	color: var(--color-white);
 	font-family: var(--font-monospace);
-	font-size: 12px;
+	font-size: var(--font-size-output);
 }
 
 :host .wrapper {
@@ -22,7 +22,7 @@
 :host .time {
 	color: var(--color-white);
 	font-family: var(--font-monospace);
-	font-size: 12px;
+	font-size: var(--font-size-output);
 	padding: 2px;
 }
 

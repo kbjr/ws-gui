@@ -2,12 +2,25 @@
 <html>
 <head>
 	<title>WS GUI</title>
+
+	<!-- Load in the appplication code -->
 	<script type="text/javascript">require('./components/app');</script>
+
+	<!-- Load in the application base styles -->
 	<link rel="stylesheet" href="./fonts/montserrat/montserrat.css">
 	<link rel="stylesheet" href="./main.css">
 </head>
 <body>
+	<!-- These are used for dynamically calculating the size of rendered output -->
+	<!-- characters on the fly. They are hidden from view and styled the same as -->
+	<!-- output text so we can grab the width/height of them dynamically at any time -->
+	<div class="block test-character">m</div>
+	<div class="inline test-character">m</div>
+
+	<!-- This is where the actually application content is rendered -->
 	<ws-app-root></ws-app-root>
+
+	<!-- This needs to run after the app root is created so it can grab a reference -->
 	<script type="text/javascript">require('./renderer');</script>
 </body>
 </html>

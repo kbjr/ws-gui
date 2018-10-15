@@ -5,6 +5,9 @@
 	--font-sans-serif: Montserrat, Helvetica Neue, Helvetica, sans-serif;
 	--font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
+	/* Font Sizes */
+	--font-size-output: 12px;
+
 	/* Colors */
 	--color-grey-1: #131d27;
 	--color-grey-2: #232d38;
@@ -46,4 +49,25 @@ html, body {
 
 body {
 	position: relative;
+}
+
+div.test-character {
+	position: absolute !important;
+	visibility: hidden !important;
+	font-size: var(--font-size-output) !important;
+	font-family: var(--font-monospace) !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    outline: 0 !important;
+    line-height: 1.5 !important;
+}
+
+div.test-character.block {
+	display: block !important;
+}
+
+div.test-character.inline {
+	display: inline !important;
 }
