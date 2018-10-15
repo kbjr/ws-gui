@@ -54,6 +54,7 @@
       ]
     },
     "linux": {
+      "category": "Development",
       "target": [
         { "target": "AppImage", "arch": [ "x64", "ia32" ] },
         { "target": "deb", "arch": [ "x64", "ia32" ]  },
