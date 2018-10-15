@@ -7,8 +7,8 @@
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
-    "dist:mac": "electron-builder --mac",
-    "dist:windows-linux": "electron-builder --win --linux",
+    "dist:mac": "electron-builder --mac -p never",
+    "dist:windows-linux": "electron-builder --win --linux -p never",
     "clean": "rimraf dist"
   },
   "repository": {
