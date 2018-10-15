@@ -7,6 +7,8 @@
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:windows-linux": "electron-builder --win --linux",
     "clean": "rimraf dist"
   },
   "repository": {
@@ -40,6 +42,25 @@
   },
   "build": {
     "appId": "com.electron.ws-gui",
-    "win": {}
+    "compression": "maximum",
+    "win": {
+      "target": [
+        { "target": "nsis", "arch": [ "x64", "ia32" ] }
+      ]
+    },
+    "mac": {
+      "target": [
+        { "target": "dmg", "arch": [ "x64", "ia32" ] }
+      ]
+    },
+    "linux": {
+      "target": [
+        { "target": "AppImage", "arch": [ "x64", "ia32" ] },
+        { "target": "deb", "arch": [ "x64", "ia32" ]  },
+        { "target": "rpm", "arch": [ "x64", "ia32" ]  },
+        { "target": "freebsd", "arch": [ "x64", "ia32" ]  },
+        { "target": "apk", "arch": [ "x64", "ia32" ]  }
+      ]
+    }
   }
 }
