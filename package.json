@@ -1,6 +1,6 @@
 {
   "name": "ws-gui",
-  "version": "0.0.9-alpha",
+  "version": "0.0.10-alpha",
   "description": "An Electron based WebSocket client",
   "main": "src/main.js",
   "scripts": {
@@ -43,25 +43,67 @@
   "build": {
     "appId": "com.electron.ws-gui",
     "compression": "maximum",
-    "publish": [ ],
+    "publish": [],
     "win": {
       "target": [
-        { "target": "nsis", "arch": [ "x64", "ia32" ] }
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ]
     },
     "mac": {
       "target": [
-        { "target": "dmg", "arch": [ "x64", "ia32" ] }
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ]
     },
     "linux": {
       "category": "Development",
       "target": [
-        { "target": "AppImage", "arch": [ "x64", "ia32" ] },
-        { "target": "deb", "arch": [ "x64", "ia32" ]  },
-        { "target": "rpm", "arch": [ "x64", "ia32" ]  },
-        { "target": "freebsd", "arch": [ "x64", "ia32" ]  },
-        { "target": "apk", "arch": [ "x64", "ia32" ]  }
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "deb",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "rpm",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "freebsd",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "apk",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
       ]
     }
   }
