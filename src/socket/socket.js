@@ -5,6 +5,7 @@ const EventEmitter = require('events');
 const { formatJson } = require('../utils/prism');
 const { escapeHtml } = require('../utils/escape-html');
 const { SettingsManager } = require('../utils/settings-manager');
+const { prettifyJson } = require('../utils/prettify-json');
 
 const props = new WeakMap();
 
@@ -13,7 +14,8 @@ const settingsManager = new SettingsManager({
 	watch: [
 		'highlightMessages',
 		'socketMaxBufferSize',
-		'socketMaxBufferWait'
+		'socketMaxBufferWait',
+		'prettyJSON'
 	]
 });
 
@@ -22,7 +24,8 @@ const settingsManager = new SettingsManager({
 const settings = {
 	highlightMessages: settingsManager.get('highlightMessages'),
 	socketMaxBufferSize: settingsManager.get('socketMaxBufferSize'),
-	socketMaxBufferWait: settingsManager.get('socketMaxBufferWait')
+	socketMaxBufferWait: settingsManager.get('socketMaxBufferWait'),
+	prettyJSON: settingsManager.get('prettyJSON')
 };
 
 // When one of the settings we care about changes, update our cache
@@ -30,6 +33,7 @@ settingsManager.on('watched-change', () => {
 	settings.highlightMessages = settingsManager.get('highlightMessages');
 	settings.socketMaxBufferSize = settingsManager.get('socketMaxBufferSize');
 	settings.socketMaxBufferWait = settingsManager.get('socketMaxBufferWait');
+	settings.prettyJSON = settingsManager.get('prettyJSON');
 });
 
 /**
@@ -125,26 +129,25 @@ exports.Socket = class Socket extends EventEmitter {
 
 		const events = _props.buffer.splice(0, _props.buffer.length);
 
-		if (settings.highlightMessages) {
-			events.forEach((event) => {
-				if (event.message) {
-					if (event.isJson) {
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i];
+
+			if (event.message) {
+				if (event.isJson) {
+					if (settings.prettyJSON) {
+						event.message = prettifyJson(event.message);
+						console.log(event.message);
+					}
+
+					if (settings.highlightMessages) {
 						event.formatted = formatJson(event.message);
 					}
-
-					else {
-						event.formatted = escapeHtml(event.message);
-					}
 				}
-			});
-		}
 
-		else {
-			events.forEach((event) => {
-				if (event.message) {
+				else {
 					event.formatted = escapeHtml(event.message);
 				}
-			});
+			}
 		}
 
 		app.send('socket.events', { events });

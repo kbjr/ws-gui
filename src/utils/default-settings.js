@@ -9,6 +9,9 @@ exports.defaultSettings = {
 	// Should messages be syntax highlighted?
 	highlightMessages: true,
 
+	// Auto-formats JSON messages
+	prettyJSON: false,
+
 	// The amount of extra frames to render before and after the "visible" area
 	frameBufferSize: 10,
 
