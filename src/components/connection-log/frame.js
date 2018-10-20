@@ -109,11 +109,8 @@ const drawNode = (frame) => {
 			node.innerHTML = `Socket open url=${event.url}`;
 			break;
 
-		case 'message-out':
-			node.innerHTML = event.formatted ? `<pre>${event.formatted}</pre>` : event.message;
-			break;
-
 		case 'message-in':
+		case 'message-out':
 			node.innerHTML = event.formatted ? `<pre>${event.formatted}</pre>` : event.message;
 			break;
 

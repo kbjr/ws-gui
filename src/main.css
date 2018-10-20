@@ -71,3 +71,8 @@ div.test-character.block {
 div.test-character.inline {
 	display: inline !important;
 }
+
+div#modal-root {
+	position: absolute;
+	z-index: 999999;
+}

@@ -4,16 +4,33 @@ const { app } = require('electron');
 const EventEmitter = require('events');
 const { formatJson } = require('../utils/prism');
 const { escapeHtml } = require('../utils/escape-html');
+const { SettingsManager } = require('../utils/settings-manager');
 
 const props = new WeakMap();
 
-// Controls buffering to enable the render process to remain unblocked, even while receiving
-// large numbers of messages
-const maxBufferSize = 25;
-const maxBufferWait = 50;
+const settingsManager = new SettingsManager({
+	emitPerSetting: false,
+	watch: [
+		'highlightMessages',
+		'socketMaxBufferSize',
+		'socketMaxBufferWait'
+	]
+});
 
-// Should messages be syntax highlighted?
-const highlightMessages = true;
+// We cache the settings here because this code is all hot path and
+// we don't want to waste time doing more complex lookups
+const settings = {
+	highlightMessages: settingsManager.get('highlightMessages'),
+	socketMaxBufferSize: settingsManager.get('socketMaxBufferSize'),
+	socketMaxBufferWait: settingsManager.get('socketMaxBufferWait')
+};
+
+// When one of the settings we care about changes, update our cache
+settingsManager.on('watched-change', () => {
+	settings.highlightMessages = settingsManager.get('highlightMessages');
+	settings.socketMaxBufferSize = settingsManager.get('socketMaxBufferSize');
+	settings.socketMaxBufferWait = settingsManager.get('socketMaxBufferWait');
+});
 
 /**
  * Uses `ws.WebSocket` to make the actual outbound connection
@@ -22,7 +39,7 @@ const highlightMessages = true;
  */
 
 exports.Socket = class Socket extends EventEmitter {
-	constructor(url, { highDetail = true } = { }) {
+	constructor(url, { highDetail = false } = { }) {
 		super();
 
 		console.log(`Attempting to open socket url=${url}`);
@@ -80,6 +97,7 @@ exports.Socket = class Socket extends EventEmitter {
 
 	pushToBuffer(type, attrs) {
 		const _props = props.get(this);
+		const { maxBufferSize, maxBufferWait } = settings;
 
 		const event = Object.assign(attrs || { }, {
 			type,
@@ -107,7 +125,7 @@ exports.Socket = class Socket extends EventEmitter {
 
 		const events = _props.buffer.splice(0, _props.buffer.length);
 
-		if (highlightMessages) {
+		if (settings.highlightMessages) {
 			events.forEach((event) => {
 				if (event.message) {
 					if (event.isJson) {

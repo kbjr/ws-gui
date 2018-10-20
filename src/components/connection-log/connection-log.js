@@ -3,20 +3,19 @@ const renderer = require('../../renderer');
 const { loadFile } = require('../../utils/load-file');
 const { initShadow } = require('../../utils/init-shadow');
 const { debounce } = require('../../utils/debounce');
+const { SettingsManager } = require('../../utils/settings-manager');
 const { ipcRenderer } = require('electron');
 const { Frame } = require('./frame');
 
 const props = new WeakMap();
 
-// The minimum amount of time (milliseconds) between redraws
-const redrawDebounceInterval = 100;
+const settingsManager = new SettingsManager({
+	watch: [ 'redrawDebounceInterval', 'outputFileSize' ]
+});
 
 // The height, in pixels, of a single line frame, used to calculate the minimum
 // number of frames that need to be rendered at any given time for virtualization
 const minimumFrameHeight = 47;
-
-// The amount of extra frames to render on each side
-const frameBufferSize = 10;
 
 exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 	constructor() {
@@ -42,9 +41,29 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 		_props.lowerBuffer = _props.shadow.querySelector('.lower-buffer');
 		_props.content = _props.shadow.querySelector('.content');
 
+		// The minimum amount of time (milliseconds) between redraws
+		const redrawDebounceInterval = settingsManager.get('redrawDebounceInterval');
+
 		this.onEvents = this.onEvents.bind(this);
-		this.redraw = debounce(redrawDebounceInterval, this.redraw.bind(this), this.onDebouncedRedraw.bind(this));
-		this.completeRedraw = debounce(redrawDebounceInterval, this.completeRedraw.bind(this));
+
+		// These are never called directly, only through the debounced versions below
+		this._redraw = this.redraw.bind(this);
+		this._onDebouncedRedraw = this.onDebouncedRedraw.bind(this);
+		this._completeRedraw = this.completeRedraw.bind(this);
+
+		this.redraw = debounce(redrawDebounceInterval, this._redraw, this._onDebouncedRedraw);
+		this.completeRedraw = debounce(redrawDebounceInterval, this._completeRedraw);
+
+		// When the `redrawDebounceInterval` setting changes, update the debounce timers
+		settingsManager.on('redrawDebounceInterval.change', () => {
+			const redrawDebounceInterval = settingsManager.get('redrawDebounceInterval');
+
+			this.redraw = debounce(redrawDebounceInterval, this._redraw, this._onDebouncedRedraw);
+			this.completeRedraw = debounce(redrawDebounceInterval, this._completeRedraw);
+		});
+
+		// When the `outputFontSize` setting changes, trigger a redraw
+		settingsManager.on('outputFileSize.change', this.completeRedraw);
 
 		// Add all of the event listeners waiting for input to redraw
 		renderer.on('resize', this.completeRedraw);
@@ -80,6 +99,9 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 
 		const _props = props.get(this);
 		const { scrollTop, scrollHeight, offsetHeight } = this;
+
+		// The amount of extra frames to render on each side
+		const frameBufferSize = settingsManager.get('frameBufferSize');
 
 		// If we have new frames, we need to check if we're scrolling with the adds, or staying put
 		const scrollToBottom = _props.newFrames.length && (scrollTop + offsetHeight) >= scrollHeight;
@@ -170,6 +192,9 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 };
 
 const getFramesToDraw = (frames, neededFrames, scrollTop, scrollToBottom) => {
+	// The amount of extra frames to render on each side
+	const frameBufferSize = settingsManager.get('frameBufferSize');
+
 	// If we are viewing from the bottom, start grabbing frames from the end of the list
 	if (scrollToBottom) {
 		return frames.slice(-neededFrames);

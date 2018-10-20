@@ -2,6 +2,8 @@
 const { app, BrowserWindow } = require('electron');
 const { closeSocketForShutdown } = require('./socket');
 
+require('./utils/settings');
+
 const createWindow = () => {
 	app.window = new BrowserWindow({
 		width: 1200,
