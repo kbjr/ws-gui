@@ -1,9 +1,7 @@
 
 const { loadFile } = require('../../utils/load-file');
 const { initShadow } = require('../../utils/init-shadow');
-const { SettingsManager } = require('../../utils/settings-manager');
-
-const settingsManager = new SettingsManager();
+const { settings } = require('../../utils/settings');
 
 const messageHideWaitDuration = 3000;
 
@@ -33,7 +31,7 @@ exports.SettingsEditor = class SettingsEditor extends HTMLElement {
 		_props.saveStatus = _props.shadow.querySelector('#status');
 
 		// Set the initial settings content
-		_props.settings.innerHTML = JSON.stringify(settingsManager.settings, null, '    ');
+		_props.settings.innerHTML = JSON.stringify(settings.get(), null, '\t');
 
 		// Set the save button event listener
 		_props.saveButton.addEventListener('click', () => this.save());
@@ -48,7 +46,7 @@ exports.SettingsEditor = class SettingsEditor extends HTMLElement {
 		this.dispatchEvent(new CustomEvent('close-container', { bubbles: true }));
 	}
 
-	save() {
+	async save() {
 		const _props = props.get(this);
 
 		if (_props.statusHideTimer) {
@@ -66,9 +64,9 @@ exports.SettingsEditor = class SettingsEditor extends HTMLElement {
 		};
 
 		const settingsRaw = _props.settings.value;
-		const settings = parseJsonSafe(settingsRaw);
+		const newSettings = parseJsonSafe(settingsRaw);
 
-		if (settings == null || typeof settings !== 'object') {
+		if (newSettings == null || typeof newSettings !== 'object') {
 			_props.saveButton.disabled = false;
 			_props.saveStatus.innerHTML = '<ws-icon value="cancel"></ws-icon> Settings Invalid';
 			_props.saveStatus.className = 'visible';
@@ -77,18 +75,23 @@ exports.SettingsEditor = class SettingsEditor extends HTMLElement {
 			return;
 		}
 
-		console.log('Saving new settings', settings);
+		console.log('Saving new settings', newSettings);
 
-		const onSave = () => {
-			settingsManager.removeListener('change', onSave);
+		try {
+			await settings.update(newSettings);
+
 			_props.saveButton.disabled = false;
 			_props.saveStatus.innerHTML = '<ws-icon value="ok"></ws-icon> New Settings Saved';
 			_props.saveStatus.className = 'visible';
 			_props.statusHideTimer = setTimeout(hideStatus, messageHideWaitDuration);
-		};
+		}
 
-		settingsManager.on('change', onSave);
-		settingsManager.update(settings);
+		catch (error) {
+			_props.saveButton.disabled = false;
+			_props.saveStatus.innerHTML = '<ws-icon value="cancel"></ws-icon> Failed to Save Settings';
+			_props.saveStatus.className = 'visible';
+			_props.statusHideTimer = setTimeout(hideStatus, messageHideWaitDuration);
+		}
 	}
 };
 

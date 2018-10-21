@@ -1,5 +1,5 @@
 
-exports.defaultSettings = {
+exports.settings = {
 	// Font size of the output panel
 	outputFontSize: '12px',
 
@@ -24,8 +24,17 @@ exports.defaultSettings = {
 	socketMaxBufferWait: 50
 };
 
-exports.defaultBookmarks = [
-	//
+exports.bookmarks = [
+	{
+		name: 'Example',
+		url: 'wss://echo.websocket.org',
+		messages: [
+			{
+				name: 'Hello',
+				content: 'Hello, World!'
+			}
+		]
+	}
 ];
 
-// exports.
+exports.environments = [ ];

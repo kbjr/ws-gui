@@ -1,10 +1,6 @@
 
 const renderer = require('../renderer');
-const { SettingsManager } = require('./settings-manager');
-
-const settingsManager = new SettingsManager({
-	watch: [ 'outputFontSize' ]
-});
+const { settings } = require('./settings');
 
 let blockChar;
 let inlineChar;
@@ -43,4 +39,4 @@ exports.recalculateCharSize = () => {
 
 // When the app is resized, we need to recalculate to make sure we have an accurate column count
 renderer.on('resize', exports.recalculateCharSize);
-settingsManager.on('outputFontSize.change', this.completeRedraw);
+settings.on('change.outputFontSize', exports.recalculateCharSize);
