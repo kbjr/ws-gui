@@ -3,6 +3,7 @@ const { loadFile } = require('../../utils/load-file');
 const { initShadow } = require('../../utils/init-shadow');
 const { ipcRenderer } = require('electron');
 const { appRoot } = require('../../renderer');
+const { Modal } = require('../modal');
 
 const props = new WeakMap();
 
@@ -31,6 +32,7 @@ exports.ControlPanel = class ControlPanel extends HTMLElement {
 		_props.messageTextarea = _props.shadow.querySelector('#message');
 		_props.sendButton = _props.shadow.querySelector('#send');
 		_props.clearOutputButton = _props.shadow.querySelector('#clear-output');
+		_props.settingsButton = _props.shadow.querySelector('#open-settings');
 
 		// Bind the open/close socket button event
 		_props.openCloseButton.addEventListener('click', () => this.toggleOpen());
@@ -40,6 +42,9 @@ exports.ControlPanel = class ControlPanel extends HTMLElement {
 
 		// Bind the clear output button event
 		_props.clearOutputButton.addEventListener('click', () => this.clearOutput());
+
+		// Bind the show settings button event
+		_props.settingsButton.addEventListener('click', () => this.openSettingsPanel());
 
 		// Bind the on open event
 		ipcRenderer.on('socket.open', () => {
@@ -97,5 +102,9 @@ exports.ControlPanel = class ControlPanel extends HTMLElement {
 
 	clearOutput() {
 		appRoot().connectionLog.clear();
+	}
+
+	openSettingsPanel() {
+		Modal.open('<ws-settings-editor></ws-settings-editor>');
 	}
 };

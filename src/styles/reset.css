@@ -5,3 +5,11 @@
 	padding: 0;
 	border: 0;
 }
+
+:host h1,
+:host h2,
+:host h3 {
+	color: var(--color-white);
+	font-family: var(--font-heading);
+	font-weight: 500;
+}

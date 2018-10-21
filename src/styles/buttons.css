@@ -6,8 +6,29 @@
 	color: var(--color-white);
 	font-family: var(--font-sans-serif);
 	border: 1px var(--color-grey-1) solid;
+	outline: 0;
+}
+
+:host button:active {
+	outline: 0;
 }
 
 :host button[disabled] {
 	opacity: 0.6;
+}
+
+:host button.btn-flat {
+	background: transparent;
+	border: 0;
+	font-size: 14px;
+	color: var(--color-grey-4);
+	transition: color 0.125s linear;
+}
+
+:host button.btn-flat:hover {
+	color: var(--color-white);
+}
+
+:host button.btn-flat:active {
+	outline: 0;
 }

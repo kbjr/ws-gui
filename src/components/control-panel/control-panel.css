@@ -35,3 +35,10 @@
 	border-top-left-radius: 5px;
 	background-color: var( --color-grey-1);
 }
+
+:host .settings {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 10px;
+}

@@ -1,0 +1,39 @@
+
+:host {
+	display: contents;
+}
+
+:host .wrapper {
+	padding: 20px;
+}
+
+:host header {
+	/**/
+}
+
+:host main {
+	margin: 20px 0;
+}
+
+:host footer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+:host h2 {
+	/**/
+}
+
+:host textarea#settings {
+	width: 100%;
+	height: 400px;
+}
+
+:host .save {
+	align-self: flex-start;
+}
+
+:host .close {
+	align-self: flex-end;
+}

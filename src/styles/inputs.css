@@ -8,6 +8,11 @@
 	color: var(--color-white);
 }
 
+:host input[type="text"]:focus,
+:host textarea:focus {
+	outline: 0;
+}
+
 :host input[type="text"][disabled],
 :host textarea[disabled] {
 	opacity: 0.6;

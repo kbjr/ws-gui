@@ -1,0 +1,46 @@
+
+:host {
+	display: contents;
+
+	--modal-animation-speed: 0.15s;
+}
+
+:host .wrapper {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.6);
+	transition: opacity var(--modal-animation-speed) linear;
+	opacity: 0;
+}
+
+:host .wrapper.hidden,
+:host .wrapper.hiding {
+	opacity: 0;
+}
+
+:host .wrapper.shown,
+:host .wrapper.showing {
+	opacity: 1;
+}
+
+:host aside {
+	background: var(--color-grey-2);
+	border: 1px black solid;
+	width: 500px;
+	margin: 30px auto;
+	transition: transform var(--modal-animation-speed) linear;
+	transform: translateY(-100px);
+}
+
+:host .wrapper.hidden aside,
+:host .wrapper.hiding aside {
+	transform: translateY(-100px);
+}
+
+:host .wrapper.shown aside,
+:host .wrapper.showing aside {
+	transform: translateY(0);
+}

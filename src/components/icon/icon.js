@@ -1,4 +1,5 @@
 
+const { chars } = require('./chars');
 const { loadFile } = require('../../utils/load-file');
 const { initShadow } = require('../../utils/init-shadow');
 
@@ -24,7 +25,10 @@ exports.Icon = class Icon extends HTMLElement {
 
 		_props.span = _props.shadow.querySelector('span');
 
-		_props.span.className = this.getAttribute('value');
+		const value = this.getAttribute('value');
+
+		_props.span.className = value;
+		_props.span.innerHTML = chars[value];
 
 		props.set(this, _props);
 	}
@@ -35,6 +39,7 @@ exports.Icon = class Icon extends HTMLElement {
 		switch (name) {
 			case 'value':
 				_props.span.className = newValue;
+				_props.span.innerHTML = chars[newValue];
 				break;
 		}
 	}
