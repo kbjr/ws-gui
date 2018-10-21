@@ -16,7 +16,7 @@ Copyright (C) 2016 by Dave Gandy
 
 Author:    Dave Gandy
 
-License:   SIL ()
+License:   SIL (http://scripts.sil.org/OFL)
 
 Homepage:  http://fortawesome.github.com/Font-Awesome/
 
