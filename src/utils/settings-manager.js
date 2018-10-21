@@ -17,10 +17,11 @@ exports.SettingsManager = class SettingsManager extends EventEmitter {
 
 		// This is the main process, bind directly to the raw settings util
 		if (process.type === 'browser') {
-			const { settings, events } = require('./settings');
+			const { settings, events, writeSettings } = require('./settings');
 
 			_props.current = settings();
 			_props.getSettings = () => settings();
+			_props.setSettings = (newSettings) => writeSettings(newSettings);
 			_props.unbind = () => {
 				events.removeListener('settings.applied', this.onChange);
 			};
@@ -34,6 +35,7 @@ exports.SettingsManager = class SettingsManager extends EventEmitter {
 
 			_props.current = renderer.settings();
 			_props.getSettings = () => renderer.settings();
+			_props.setSettings = (newSettings) => renderer.writeSettings(newSettings);
 			_props.unbind = () => {
 				renderer.removeListener('settings.applied', this.onChange);
 			};
@@ -63,6 +65,22 @@ exports.SettingsManager = class SettingsManager extends EventEmitter {
 
 	get(setting) {
 		return this.settings[setting] || defaultSettings[setting];
+	}
+
+	set(setting, newValue) {
+		const _props = props.get(this);
+
+		const newSettings = Object.assign({ }, _props.current, {
+			[setting]: newValue
+		});
+
+		_props.setSettings(newSettings);
+	}
+
+	update(newSettings) {
+		const { setSettings } = props.get(this);
+
+		setSettings(newSettings);
 	}
 
 	onChange() {

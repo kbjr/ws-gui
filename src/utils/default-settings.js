@@ -3,6 +3,9 @@ exports.defaultSettings = {
 	// Font size of the output panel
 	outputFontSize: '12px',
 
+	// Font size of the input text areas panel
+	textareaFontSize: '12px',
+
 	// The minimum amount of time (milliseconds) between redraws
 	redrawDebounceInterval: 100,
 

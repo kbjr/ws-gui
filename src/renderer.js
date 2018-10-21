@@ -27,8 +27,9 @@ exports.applySettings = (settings) => {
 
 	latestSettings = settings;
 
-	// Set the output font size
+	// Set any global style settings
 	documentElement.style.setProperty('--font-size-output', settings.outputFontSize || defaultSettings.outputFontSize);
+	documentElement.style.setProperty('--font-size-textarea', settings.textareaFontSize || defaultSettings.textareaFontSize);
 
 	// Emit an event when new settings are applied
 	exports.emit('settings.applied', { settings });

@@ -136,7 +136,6 @@ exports.Socket = class Socket extends EventEmitter {
 				if (event.isJson) {
 					if (settings.prettyJSON) {
 						event.message = prettifyJson(event.message);
-						console.log(event.message);
 					}
 
 					if (settings.highlightMessages) {

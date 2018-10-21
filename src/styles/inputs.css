@@ -6,6 +6,7 @@
 	background: var(--color-grey-1);
 	border: 1px var(--color-grey-3) solid;
 	color: var(--color-white);
+	font-size: var(--font-size-textarea);
 }
 
 :host input[type="text"]:focus,

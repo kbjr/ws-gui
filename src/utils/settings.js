@@ -110,6 +110,6 @@ const writeSettings = (settings) => new Promise((resolve, reject) => {
 
 // Listen for read/write requests from the renderer process
 ipcMain.on('settings.load', () => exports.loadSettings());
-ipcMain.on('settings.write', (settings) => exports.writeSettings(settings));
+ipcMain.on('settings.write', (event, { settings }) => exports.writeSettings(settings));
 
 console.log(`settings file: ${getSettingsFile()}`);
