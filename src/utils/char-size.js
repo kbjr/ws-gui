@@ -43,4 +43,4 @@ exports.recalculateCharSize = () => {
 
 // When the app is resized, we need to recalculate to make sure we have an accurate column count
 renderer.on('resize', exports.recalculateCharSize);
-settingsManager.on('outputFontSize.change', this.completeRedraw);
+settingsManager.on('outputFontSize.change', exports.recalculateCharSize);
