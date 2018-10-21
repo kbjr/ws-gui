@@ -10,7 +10,7 @@ const { Frame } = require('./frame');
 const props = new WeakMap();
 
 const settingsManager = new SettingsManager({
-	watch: [ 'redrawDebounceInterval', 'outputFileSize' ]
+	watch: [ 'redrawDebounceInterval', 'outputFontSize' ]
 });
 
 // The height, in pixels, of a single line frame, used to calculate the minimum
@@ -63,7 +63,7 @@ exports.ConnectionLog = class ConnectionLog extends HTMLElement {
 		});
 
 		// When the `outputFontSize` setting changes, trigger a redraw
-		settingsManager.on('outputFileSize.change', this.completeRedraw);
+		settingsManager.on('outputFontSize.change', this.completeRedraw);
 
 		// Add all of the event listeners waiting for input to redraw
 		renderer.on('resize', this.completeRedraw);
