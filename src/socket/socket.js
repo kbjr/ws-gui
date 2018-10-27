@@ -140,6 +140,10 @@ exports.Socket = class Socket extends EventEmitter {
 					if (settingsCache.highlightMessages) {
 						event.formatted = formatJson(event.message);
 					}
+					
+					else {
+						event.formatted = event.message;
+					}
 				}
 
 				else {
