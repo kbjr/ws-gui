@@ -15,7 +15,7 @@
 }
 
 :host aside {
-	flex: 0 0 200px;
+	flex: 0 0 250px;
 	background: var(--color-grey-2);
 	border-right: 2px var(--color-grey-1) solid;
 }
@@ -28,7 +28,7 @@
 }
 
 :host ws-control-panel {
-	flex: 0 0 200px;
+	flex: 0 0 250px;
 	background: var(--color-grey-2);
 }
 

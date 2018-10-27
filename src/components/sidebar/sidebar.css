@@ -2,3 +2,29 @@
 :host {
 	/**/
 }
+
+:host .environment {
+	padding: 10px 10px 50px;
+	border-bottom: 2px var(--color-grey-1) solid;
+	position: relative;
+	background: var(--color-current-environment);
+}
+
+:host .environment h3 {
+	font-size: 14px;
+	padding-bottom: 10px;
+}
+
+:host .environment select {
+	display: block;
+	margin: 10px 0;
+	width: 100%;
+}
+
+:host .environment #manage-environments {
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	font-size: 12px;
+	color: var(--color-white);
+}

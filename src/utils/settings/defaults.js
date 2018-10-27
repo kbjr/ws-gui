@@ -37,4 +37,11 @@ exports.bookmarks = [
 	}
 ];
 
-exports.environments = [ ];
+exports.environments = [
+	{
+		name: 'Default',
+		color: 'grey-2',
+		selected: true,
+		content: { }
+	}
+];

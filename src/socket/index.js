@@ -3,6 +3,7 @@ const { Socket } = require('./socket');
 const { states } = require('./states');
 const { closeCodes } = require('./close-codes');
 const { ipcMain, app } = require('electron');
+const { environments } = require('../utils/settings');
 
 let activeSocket;
 let highDetail = false;
@@ -23,7 +24,17 @@ ipcMain.on('socket.open', (event, { url }) => {
 		return;
 	}
 
-	const socket = activeSocket = new Socket(url, { highDetail });
+	if (url) {
+		app.send('socket.openError', {
+			error: 'Cannot open socket, no URL provided'
+		});
+
+		return;
+	}
+
+	const parsedUrl = environments.parseEnvironmentVariables(url);
+
+	const socket = activeSocket = new Socket(parsedUrl, { highDetail });
 
 	activeSocket.on('close', () => {
 		if (activeSocket === socket) {
@@ -55,7 +66,9 @@ ipcMain.on('socket.send', (event, { id, message }) => {
 		return;
 	}
 
-	activeSocket.send(id, message);
+	const parsedMessage = environments.parseEnvironmentVariables(message);
+
+	activeSocket.send(id, parsedMessage);
 });
 
 ipcMain.on('socket.set:highDetail', (event, { value }) => {
