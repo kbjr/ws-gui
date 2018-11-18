@@ -24,7 +24,7 @@ ipcMain.on('socket.open', (event, { url }) => {
 		return;
 	}
 
-	if (url) {
+	if (! url) {
 		app.send('socket.openError', {
 			error: 'Cannot open socket, no URL provided'
 		});

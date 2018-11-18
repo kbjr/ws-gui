@@ -18,3 +18,9 @@
 :host textarea[disabled] {
 	opacity: 0.6;
 }
+
+:host input[type="text"].plain-text {
+	background: transparent;
+	border: 0;
+	padding: 0;
+}

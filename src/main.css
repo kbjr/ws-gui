@@ -31,7 +31,9 @@
 	--color-green: #5cb85c;
 	--color-teal: #5bc0de;
 	--color-cyan: #17a2b8;
+	--color-off-white: #eee;
 	--color-white: #fff;
+	--color-modal-mask: rgba(0,0,0,0.6);
 	/*--color-gray: #6c757d;*/
 	/*--primary: #0275d8;*/
 	/*--secondary: #394b5d;*/

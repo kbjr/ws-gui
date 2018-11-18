@@ -1,49 +1,97 @@
 
 const { loadFile } = require('../../utils/load-file');
 const { initShadow } = require('../../utils/init-shadow');
-const { settings } = require('../../utils/settings');
+const { settings, environments, environmentColors } = require('../../utils/settings');
 
 const messageHideWaitDuration = 3000;
 
 const props = new WeakMap();
 
-exports.SettingsEditor = class SettingsEditor extends HTMLElement {
+exports.EnvironmentsEditor = class EnvironmentsEditor extends HTMLElement {
 	constructor() {
 		super();
 
 		const _props = {
 			statusHideTimer: null,
+			currentEnvironment: 'Default',
 			shadow: initShadow(this, {
-				html: loadFile(__dirname, 'settings-editor.html'),
+				html: loadFile(__dirname, 'environments-editor.html'),
 				css: [
 					loadFile(__dirname, '../../styles/reset.css'),
 					loadFile(__dirname, '../../styles/buttons.css'),
 					loadFile(__dirname, '../../styles/inputs.css'),
-					loadFile(__dirname, 'settings-editor.css')
+					loadFile(__dirname, 'environments-editor.css')
 				]
 			})
 		};
 
 		_props.wrapper = _props.shadow.querySelector('.wrapper');
-		_props.settings = _props.shadow.querySelector('#settings');
-		_props.saveButton = _props.shadow.querySelector('#save');
+		_props.environments = _props.shadow.querySelector('#environments');
+		_props.editor = _props.shadow.querySelector('#editor');
 		_props.closeButton = _props.shadow.querySelector('#close');
-		_props.saveStatus = _props.shadow.querySelector('#status');
-
-		// Set the initial settings content
-		_props.settings.innerHTML = JSON.stringify(settings.get(), null, '  ');
-
-		// Set the save button event listener
-		_props.saveButton.addEventListener('click', () => this.save());
 
 		// Set the close button event listener
 		_props.closeButton.addEventListener('click', () => this.close());
 
 		props.set(this, _props);
+
+		this.renderEnvironmentList();
+		this.renderEditor();
 	}
 
 	close() {
 		this.dispatchEvent(new CustomEvent('close-container', { bubbles: true }));
+	}
+
+	renderEnvironmentList() {
+		const envs = { };
+		const _props = props.get(this);
+
+		const environmentList = environments.environments.map((env) => {
+			envs[env.name] = env;
+
+			const className = env.name === _props.currentEnvironment ? 'selected' : '';
+
+			return `<li class="${className}" data-name="${env.name}">${env.name}</li>`;
+		});
+
+		_props.environments.innerHTML = '';
+		_props.environments.innerHTML = environmentList.join('');
+
+		const items = [ ..._props.environments.querySelectorAll('li') ];
+
+		items.forEach((item) => {
+			const env = envs[item.getAttribute('data-name')];
+
+			item.addEventListener('click', () => this.selectEnvironment(env));
+		});
+	}
+
+	renderEditor() {
+		const _props = props.get(this);
+		const env = environments.getEnvironment(_props.currentEnvironment);
+
+		const colors = environmentColors.map((color) => {
+			const className = color === env.color ? 'selected' : '';
+
+			return `<li class="${className}" data-color="${color}" style="background-color: var(--color-${color})"></li>`;
+		});
+
+		const content = JSON.stringify(env.content, null, '  ');
+
+		_props.editor.innerHTML = '';
+		_props.editor.innerHTML = `
+			<h3>${env.name}</h3>
+			<ul id="color-selector">${colors.join('')}</ul>
+			<textarea id="content">${content}</textarea>
+		`;
+	}
+
+	selectEnvironment(env) {
+		props.get(this).currentEnvironment = env.name;
+
+		this.renderEnvironmentList();
+		this.renderEditor();
 	}
 
 	async save() {

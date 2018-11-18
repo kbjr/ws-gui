@@ -2,8 +2,13 @@
 exports.mergeRecursive = (host, ...donors) => {
 	donors.forEach((donor) => {
 		Object.keys(donor).forEach((property) => {
-			if (isObject(host[property]) && isObject(donor[property])) {
-				exports.mergeRecursive(host[property], donor[property]);
+			if (isObject(donor[property])) {
+				if (isObject(host[property])) {
+					exports.mergeRecursive(host[property], donor[property]);
+				}
+				else {
+					host[property] = exports.mergeRecursive({ }, donor[property]);
+				}
 			}
 
 			else {

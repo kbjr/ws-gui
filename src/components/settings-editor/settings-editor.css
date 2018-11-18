@@ -28,6 +28,7 @@
 :host textarea#settings {
 	width: 100%;
 	height: 400px;
+	font-family: var(--font-monospace);
 }
 
 :host .save {

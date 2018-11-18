@@ -1,7 +1,7 @@
 
 const events = require('./events');
 const { EventEmitter } = require('events');
-const { Environment, markSelected } = require('./environment');
+const { Environment, markSelected, updateEnvironment } = require('./environment');
 
 const { readFile, writeFile } = process.type === 'browser'
 	? require('./file-io')
@@ -40,9 +40,13 @@ exports.EnvironmentsManager = class EnvironmentsManager extends EventEmitter {
 		return environments.find((environment) => environment.name === currentEnvironment);
 	}
 
+	getEnvironment(name) {
+		return props.get(this).environments.find((env) => env.name === name);
+	}
+
 	setEnvironment(name) {
 		const _props = props.get(this);
-		const environment = _props.environments.find((environment) => environment.name === name);
+		const environment = this.getEnvironment(name);
 
 		if (! environment) {
 			throw new Error(`Invalid environment selection "${name}"`);
@@ -53,6 +57,10 @@ exports.EnvironmentsManager = class EnvironmentsManager extends EventEmitter {
 		this.writeToFile();
 
 		this.emit('change');
+	}
+
+	reload() {
+		readFile('environments');
 	}
 
 	writeToFile() {
@@ -67,6 +75,7 @@ exports.EnvironmentsManager = class EnvironmentsManager extends EventEmitter {
 		console.log('Processing new environments', newEnvironments);
 
 		const _props = props.get(this);
+		const existingEnvs = _props.environments;
 		const defaultEnv = newEnvironments.find((environment) => environment.name === 'Default');
 
 		_props.environments = newEnvironments.map((env) => {
@@ -74,7 +83,15 @@ exports.EnvironmentsManager = class EnvironmentsManager extends EventEmitter {
 				_props.currentEnvironment = env.name;
 			}
 
-			return new Environment(this, env, env === defaultEnv ? { } : defaultEnv);
+			const existing = existingEnvs.find((environment) => environment.name === env.name);
+
+			if (existing) {
+				updateEnvironment(existing, env, env === defaultEnv ? { } : defaultEnv.content);
+
+				return existing;
+			}
+
+			return new Environment(this, env, env === defaultEnv ? { } : defaultEnv.content);
 		});
 
 		this.emit('change');

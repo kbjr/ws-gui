@@ -1,5 +1,6 @@
 
 require('../dropdown');
+require('../environments-editor');
 
 const { Sidebar } = require('./sidebar');
 

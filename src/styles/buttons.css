@@ -22,13 +22,7 @@
 :host button.btn-flat {
 	background: transparent;
 	border: 0;
-	font-size: 14px;
-	color: var(--color-grey-4);
-	transition: color 0.125s linear;
-}
-
-:host button.btn-flat:hover {
-	color: var(--color-white);
+	color: var(--color-off-white);
 }
 
 :host button.btn-flat:active {

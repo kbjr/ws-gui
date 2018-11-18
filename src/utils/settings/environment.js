@@ -9,6 +9,17 @@ exports.markSelected = (env, bool) => {
 	props.get(env).selected = bool;
 };
 
+exports.updateEnvironment = (env, { name, color, content, selected }, defaultContent) => {
+	props.set(env, {
+		manager: props.get(this).manager,
+		name,
+		color,
+		content,
+		selected,
+		mergedContent: mergeRecursive({ }, defaultContent, content)
+	});
+};
+
 exports.Environment = class Environment {
 	constructor(manager, { name, color, content, selected }, defaultContent = { }) {
 		props.set(this, {
@@ -41,6 +52,10 @@ exports.Environment = class Environment {
 		props.get(this).color = value;
 	}
 
+	get content() {
+		return props.get(this).content;
+	}
+
 	get(path) {
 		const { mergedContent } = props.get(this);
 
@@ -55,6 +70,13 @@ exports.Environment = class Environment {
 		const { name, color, selected, content } = props.get(this);
 
 		return { name, color, selected, content };
+	}
+
+	update(newContent) {
+		const _props = props.get(this);
+
+		_props.content = newContent;
+		_props.manager.writeToFile();
 	}
 };
 
