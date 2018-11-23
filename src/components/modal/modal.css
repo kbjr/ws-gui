@@ -11,7 +11,7 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: rgba(0,0,0,0.6);
+	background: var(--color-modal-mask);
 	transition: opacity var(--modal-animation-speed) linear;
 	opacity: 0;
 }
@@ -28,8 +28,8 @@
 
 :host aside {
 	background: var(--color-grey-2);
-	border: 1px black solid;
-	width: 500px;
+	border: 1px var(--color-grey-1) solid;
+	width: 700px;
 	margin: 30px auto;
 	transition: transform var(--modal-animation-speed) linear;
 	transform: translateY(-100px);

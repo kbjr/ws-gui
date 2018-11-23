@@ -4,36 +4,35 @@ const { app } = require('electron');
 const EventEmitter = require('events');
 const { formatJson } = require('../utils/prism');
 const { escapeHtml } = require('../utils/escape-html');
-const { SettingsManager } = require('../utils/settings-manager');
+const { settings } = require('../utils/settings');
 const { prettifyJson } = require('../utils/prettify-json');
 
 const props = new WeakMap();
 
-const settingsManager = new SettingsManager({
-	emitPerSetting: false,
-	watch: [
-		'highlightMessages',
-		'socketMaxBufferSize',
-		'socketMaxBufferWait',
-		'prettyJSON'
-	]
-});
-
 // We cache the settings here because this code is all hot path and
 // we don't want to waste time doing more complex lookups
-const settings = {
-	highlightMessages: settingsManager.get('highlightMessages'),
-	socketMaxBufferSize: settingsManager.get('socketMaxBufferSize'),
-	socketMaxBufferWait: settingsManager.get('socketMaxBufferWait'),
-	prettyJSON: settingsManager.get('prettyJSON')
+const settingsCache = {
+	highlightMessages: settings.get('highlightMessages'),
+	socketMaxBufferSize: settings.get('socketMaxBufferSize'),
+	socketMaxBufferWait: settings.get('socketMaxBufferWait'),
+	prettyJSON: settings.get('prettyJSON')
 };
 
 // When one of the settings we care about changes, update our cache
-settingsManager.on('watched-change', () => {
-	settings.highlightMessages = settingsManager.get('highlightMessages');
-	settings.socketMaxBufferSize = settingsManager.get('socketMaxBufferSize');
-	settings.socketMaxBufferWait = settingsManager.get('socketMaxBufferWait');
-	settings.prettyJSON = settingsManager.get('prettyJSON');
+settings.on('change.highlightMessages', () => {
+	settingsCache.highlightMessages = settings.get('highlightMessages');
+});
+
+settings.on('change.socketMaxBufferSize', () => {
+	settingsCache.socketMaxBufferSize = settings.get('socketMaxBufferSize');
+});
+
+settings.on('change.socketMaxBufferWait', () => {
+	settingsCache.socketMaxBufferWait = settings.get('socketMaxBufferWait');
+});
+
+settings.on('change.prettyJSON', () => {
+	settingsCache.prettyJSON = settings.get('prettyJSON');
 });
 
 /**
@@ -101,7 +100,7 @@ exports.Socket = class Socket extends EventEmitter {
 
 	pushToBuffer(type, attrs) {
 		const _props = props.get(this);
-		const { maxBufferSize, maxBufferWait } = settings;
+		const { maxBufferSize, maxBufferWait } = settingsCache;
 
 		const event = Object.assign(attrs || { }, {
 			type,
@@ -134,12 +133,16 @@ exports.Socket = class Socket extends EventEmitter {
 
 			if (event.message) {
 				if (event.isJson) {
-					if (settings.prettyJSON) {
+					if (settingsCache.prettyJSON) {
 						event.message = prettifyJson(event.message);
 					}
 
-					if (settings.highlightMessages) {
+					if (settingsCache.highlightMessages) {
 						event.formatted = formatJson(event.message);
+					}
+					
+					else {
+						event.formatted = event.message;
 					}
 				}
 

@@ -1,0 +1,65 @@
+
+:host {
+	display: contents;
+}
+
+:host *,
+::slotted(*) {
+	user-select: none;
+}
+
+:host .wrapper {
+	position: relative;
+	background: var(--color-current-environment);
+}
+
+:host .label {
+	padding: 5px 10px;
+	cursor: pointer;
+	background: var(--color-grey-1);
+	color: var(--color-white);
+	font-size: var(--font-size-button);
+	font-family: var(--font-sans-serif);
+	border: 1px var(--color-grey-3) solid;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+}
+
+:host([disabled]) .label {
+	pointer-events: none;
+	opacity: 0.6;
+}
+
+:host .label .arrow {
+	flex: 0 0 16px;
+	transform-origin: center;
+	transition: transform 0.125s linear;
+}
+
+:host .open .label .arrow {
+	transform: rotate(180deg);
+}
+
+:host .content {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	right: 0;
+	background: var(--color-grey-1);
+	border: 1px var(--color-grey-3) solid;
+}
+
+:host .open .content {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+}
+
+::slotted(button) {
+	background: var(--color-grey-1) !important;
+	border-bottom: 1px var(--color-grey-3) solid !important;
+	text-align: left;
+}
