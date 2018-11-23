@@ -15,7 +15,7 @@
 	margin-left: .2em;
 }
 
-.animate-spin {
+.spin4 {
 	animation: spin 2s infinite linear;
 	display: inline-block;
 }

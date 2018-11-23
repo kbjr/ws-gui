@@ -76,7 +76,6 @@ exports.Environment = class Environment {
 		const _props = props.get(this);
 
 		_props.content = newContent;
-		_props.manager.writeToFile();
 	}
 };
 

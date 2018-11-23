@@ -104,4 +104,8 @@ exports.EnvironmentsManager = class EnvironmentsManager extends EventEmitter {
 
 		return env.parseEnvironmentVariables(string);
 	}
+
+	createEnvironment(name) {
+		//
+	}
 };
