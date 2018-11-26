@@ -17,6 +17,7 @@
 
 :host button[disabled] {
 	opacity: 0.6;
+	cursor: default;
 }
 
 :host button.btn-flat {

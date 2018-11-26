@@ -21,7 +21,7 @@ exports.Frame = class Frame {
 		this.type = type;
 		this.event = Object.freeze(event);
 
-		Object.freeze(this);
+		// Object.freeze(this);
 
 		props.set(this, {
 			height: null,
@@ -37,9 +37,10 @@ exports.Frame = class Frame {
 	}
 
 	get height() {
-		const _props = props.get(this);
+		// const _props = props.get(this);
 
-		if (! _props.height) {
+		// if (! _props.height) {
+		if (! this._height) {
 			switch (this.type) {
 				case 'message-in':
 				case 'message-out': {
@@ -49,25 +50,26 @@ exports.Frame = class Frame {
 						recalculateCharSize();
 					}
 
-					this.event.message.split('\n').forEach((line) => {
-						// Array.from is used here to split into actual characters (not code points) before
-						// checking the string length
-						lines += Math.ceil(Array.from(line).length / charSize.cols);
-					});
+					for (let i = 0; i < this.event.lineLengths.length; i++) {
+						lines += Math.ceil(this.event.lineLengths[i] / charSize.cols);
+					}
 
 					const contentHeight = lines * charSize.height + frameHeightPadding;
 
-					_props.height = Math.max(contentHeight, frameMinHeight);
+					// _props.height = Math.max(contentHeight, frameMinHeight);
+					this._height = Math.max(contentHeight, frameMinHeight);
 					break;
 				}
 
 				default:
-					_props.height = frameMinHeight;
+					// _props.height = frameMinHeight;
+					this._height = frameMinHeight;
 					break;
 			}
 		}
 
-		return _props.height;
+		// return _props.height;
+		return this._height;
 	}
 
 	get node() {

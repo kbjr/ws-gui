@@ -26,3 +26,10 @@
 	bottom: 5px;
 	right: 5px;
 }
+
+:host .bookmarks p {
+	font-family: var(--font-sans-serif);
+	color: var(--color-white);
+	text-align: center;
+	margin-top: 20px;
+}
