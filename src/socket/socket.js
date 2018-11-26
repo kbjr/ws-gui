@@ -172,32 +172,7 @@ const onOpen = (socket) => () => {
 
 	app.send('socket.open', { time });
 	socket.pushToBuffer('socket-open', { url });
-
-	// TODO - REMOVE, TESTING CODE
-	// floodModeTest(socket);
 };
-
-// const floodModeTest = async (socket) => {
-// 	const send = onMessage(socket);
-// 	const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-// 	const testMessage = JSON.stringify({
-// 		string: 'Hello, World',
-// 		number: 1234,
-// 		boolean: true
-// 	});
-
-// 	const flood = () => {
-// 		for (let i = 0; i < 1000; i++) {
-// 			send(testMessage);
-// 		}
-// 	};
-
-
-// 	for (let i = 0; i < 100; i++) {
-// 		flood();
-// 		await wait(10);
-// 	}
-// };
 
 const onMessage = (socket) => (message) => {
 	socket.pushToBuffer('message-in', { message, isJson: isJson(message) });
@@ -236,7 +211,8 @@ const onPong = (socket) => () => {
 };
 
 const onUnexpectedResponse = (socket) => (req, res) => {
-	//
+	console.log('Recieved unexpected response', req, res);
+	socket.pushToBuffer('unexpected-response');
 };
 
 const onUpgrade = (socket) => (res) => {

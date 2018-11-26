@@ -1,8 +1,6 @@
 
 const { charSize, recalculateCharSize } = require('../../utils/char-size');
 
-const props = new WeakMap();
-
 let index = 1;
 
 // The minimum height at which to render any frame
@@ -20,26 +18,18 @@ exports.Frame = class Frame {
 		this.time = time;
 		this.type = type;
 		this.event = Object.freeze(event);
+		this.isJson = event.isJson;
+		this.isFormatted = event.formatted != null;
 
-		// Object.freeze(this);
-
-		props.set(this, {
-			height: null,
-			isJson: event.isJson,
-			isFormatted: event.formatted != null
-		});
+		this._node = null;
+		this._height = null;
 	}
 
 	reset() {
-		const _props = props.get(this);
-
-		_props.height = null;
+		this._height = null;
 	}
 
 	get height() {
-		// const _props = props.get(this);
-
-		// if (! _props.height) {
 		if (! this._height) {
 			switch (this.type) {
 				case 'message-in':
@@ -73,27 +63,15 @@ exports.Frame = class Frame {
 	}
 
 	get node() {
-		const _props = props.get(this);
-
-		if (! _props.node) {
-			_props.node = drawNode(this);
+		if (! this._node) {
+			this._node = drawNode(this);
 		}
 
-		return _props.node;
-	}
-
-	get isJson() {
-		return props.get(this).isJson;
-	}
-
-	get isFormatted() {
-		return props.get(this).isFormatted;
+		return this._node;
 	}
 
 	get isDrawn() {
-		const _props = props.get(this);
-
-		return _props.node && _props.node.parentElement;
+		return this._node && this._node.parentElement;
 	}
 };
 
