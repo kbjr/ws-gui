@@ -141,7 +141,7 @@ exports.Socket = class Socket extends EventEmitter {
 					event.formatted = formatted.formatted;
 				}
 
-				if (event.isJson) {
+				else if (event.isJson) {
 					if (settingsCache.prettyJSON) {
 						event.message = prettifyJson(event.message);
 					}
@@ -264,7 +264,7 @@ const formatHex = (message) => {
 	const endLine = () => {
 		if (hex[lineIndex]) {
 			hex[lineIndex] = hex[lineIndex].join(' ');
-			ascii[lineIndex] = ascii[lineIndex].join('');
+			ascii[lineIndex] = escapeHtml(ascii[lineIndex].join(''));
 			lineIndex++;
 		}
 	};
