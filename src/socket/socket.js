@@ -132,6 +132,15 @@ exports.Socket = class Socket extends EventEmitter {
 			const event = events[i];
 
 			if (event.message) {
+				if (event.isBinary) {
+					const formatted = formatHex(event.message);
+
+					event.lineNumbers = formatted.lineNumbers;
+					event.hex = formatted.hex;
+					event.ascii = formatted.ascii;
+					event.formatted = formatted.formatted;
+				}
+
 				if (event.isJson) {
 					if (settingsCache.prettyJSON) {
 						event.message = prettifyJson(event.message);
@@ -175,7 +184,16 @@ const onOpen = (socket) => () => {
 };
 
 const onMessage = (socket) => (message) => {
-	socket.pushToBuffer('message-in', { message, isJson: isJson(message) });
+	if (message instanceof ArrayBuffer) {
+		socket.pushToBuffer('message-in', {
+			isBinary: true,
+			message: new Uint8Array(message),
+		});
+	}
+
+	else {
+		socket.pushToBuffer('message-in', { message, isJson: isJson(message) });
+	}
 };
 
 const onClose = (socket) => (code, reason) => {
@@ -221,6 +239,10 @@ const onUpgrade = (socket) => (res) => {
 };
 
 const isJson = (message) => {
+	if (typeof message !== 'string') {
+		return false;
+	}
+
 	try {
 		JSON.parse(message);
 	}
@@ -230,4 +252,63 @@ const isJson = (message) => {
 	}
 
 	return true;
+};
+
+const formatHex = (message) => {
+	const lineNumbers = [ ];
+	const hex = [ ];
+	const ascii = [ ];
+
+	let lineIndex = 0;
+
+	const endLine = () => {
+		if (hex[lineIndex]) {
+			hex[lineIndex] = hex[lineIndex].join(' ');
+			ascii[lineIndex] = ascii[lineIndex].join('');
+			lineIndex++;
+		}
+	};
+
+	for (let i = 0; i < message.length; i++) {
+		if (! hex[lineIndex]) {
+			lineNumbers[lineIndex] = (lineIndex * 24).toString(16).padStart(4, '0');
+			hex[lineIndex] = [ ];
+			ascii[lineIndex] = [ ];
+		}
+
+		const hexLine = hex[lineIndex];
+		const asciiLine = ascii[lineIndex];
+
+		let hexByte = message[i].toString(16);
+
+		hexLine[i] = hexByte.length < 2 ? '0' + hexByte : hexByte;
+		asciiLine[i] = String.fromCharCode(message[i]);
+
+		if (hexLine.length === 24) {
+			endLine();
+		}
+	}
+
+	endLine();
+
+	const formatted = `
+		<div class="binary-message">
+			<div class="line-numbers">
+				${lineNumbers.join('<br />')}
+			</div>
+			<div class="hex">
+				${hex.join('<br />')}
+			</div>
+			<div class="ascii">
+				${ascii.join('<br />')}
+			</div>
+		</div>
+	`;
+
+	return {
+		lineNumbers,
+		hex,
+		ascii,
+		formatted
+	};
 };
