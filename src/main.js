@@ -6,9 +6,9 @@ require('./utils/settings');
 
 const createWindow = () => {
 	app.window = new BrowserWindow({
-		width: 1200,
+		width: 1260,
 		height: 900,
-		minWidth: 1000,
+		minWidth: 1260,
 		minHeight: 700,
 		// frame: false,
 		title: 'WS GUI',

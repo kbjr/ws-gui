@@ -141,30 +141,32 @@ exports.Socket = class Socket extends EventEmitter {
 					event.formatted = formatted.formatted;
 				}
 
-				else if (event.isJson) {
-					if (settingsCache.prettyJSON) {
-						event.message = prettifyJson(event.message);
-					}
+				else {
+					if (event.isJson) {
+						if (settingsCache.prettyJSON) {
+							event.message = prettifyJson(event.message);
+						}
 
-					if (settingsCache.highlightMessages) {
-						event.formatted = formatJson(event.message);
+						if (settingsCache.highlightMessages) {
+							event.formatted = formatJson(event.message);
+						}
+
+						else {
+							event.formatted = event.message;
+						}
 					}
 
 					else {
-						event.formatted = event.message;
+						event.formatted = escapeHtml(event.message);
 					}
-				}
 
-				else {
-					event.formatted = escapeHtml(event.message);
-				}
+					event.lineLengths = [ ];
 
-				event.lineLengths = [ ];
+					const lines = event.message.split('\n');
 
-				const lines = event.message.split('\n');
-
-				for (let i = 0; i < lines.length; i++) {
-					event.lineLengths.push(Array.from(lines[i]).length);
+					for (let i = 0; i < lines.length; i++) {
+						event.lineLengths.push(Array.from(lines[i]).length);
+					}
 				}
 			}
 		}
@@ -271,7 +273,7 @@ const formatHex = (message) => {
 
 	for (let i = 0; i < message.length; i++) {
 		if (! hex[lineIndex]) {
-			lineNumbers[lineIndex] = (lineIndex * 24).toString(16).padStart(4, '0');
+			lineNumbers[lineIndex] = (lineIndex * 24).toString(16).padStart(8, '0');
 			hex[lineIndex] = [ ];
 			ascii[lineIndex] = [ ];
 		}
@@ -279,10 +281,18 @@ const formatHex = (message) => {
 		const hexLine = hex[lineIndex];
 		const asciiLine = ascii[lineIndex];
 
-		let hexByte = message[i].toString(16);
+		const byte = message[i];
+		let hexByte = byte.toString(16);
 
-		hexLine[i] = hexByte.length < 2 ? '0' + hexByte : hexByte;
-		asciiLine[i] = String.fromCharCode(message[i]);
+		hexLine.push(hexByte.length < 2 ? '0' + hexByte : hexByte);
+
+		if (byte < 32 || byte > 126) {
+			asciiLine.push('\u2022');
+		}
+
+		else {
+			asciiLine.push(String.fromCharCode(message[i]));
+		}
 
 		if (hexLine.length === 24) {
 			endLine();

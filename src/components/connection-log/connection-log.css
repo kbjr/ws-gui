@@ -39,3 +39,21 @@
 	tab-size: 4;
 	hyphens: none;
 }
+
+:host .wrapper ws-event .binary-message {
+	display: flex;
+	flex-direction: row;
+}
+
+:host .wrapper ws-event .binary-message .line-numbers {
+	margin-right: 25px;
+	color: var(--color-cyan)
+}
+
+:host .wrapper ws-event .binary-message .hex {
+	margin-right: 25px;
+}
+
+:host .wrapper ws-event .binary-message .ascii {
+	color: var(--color-grey-5);
+}

@@ -19,6 +19,7 @@ exports.Frame = class Frame {
 		this.type = type;
 		this.event = Object.freeze(event);
 		this.isJson = event.isJson;
+		this.isBinary = event.isBinary;
 		this.isFormatted = event.formatted != null;
 
 		this._node = null;
@@ -34,31 +35,22 @@ exports.Frame = class Frame {
 			switch (this.type) {
 				case 'message-in':
 				case 'message-out': {
-					let lines = 0;
-
-					if (! charSize.width) {
-						recalculateCharSize();
+					if (this.isBinary) {
+						calcuateBinaryHeight(this);
 					}
 
-					for (let i = 0; i < this.event.lineLengths.length; i++) {
-						lines += Math.ceil(this.event.lineLengths[i] / charSize.cols);
+					else {
+						calculateTextHeight(this);
 					}
-
-					const contentHeight = lines * charSize.height + frameHeightPadding;
-
-					// _props.height = Math.max(contentHeight, frameMinHeight);
-					this._height = Math.max(contentHeight, frameMinHeight);
 					break;
 				}
 
 				default:
-					// _props.height = frameMinHeight;
 					this._height = frameMinHeight;
 					break;
 			}
 		}
 
-		// return _props.height;
 		return this._height;
 	}
 
@@ -91,7 +83,13 @@ const drawNode = (frame) => {
 
 		case 'message-in':
 		case 'message-out':
-			node.innerHTML = event.formatted ? `<pre>${event.formatted}</pre>` : event.message;
+			if (event.isBinary) {
+				node.innerHTML = event.formatted;
+			}
+
+			else {
+				node.innerHTML = event.formatted ? `<pre>${event.formatted}</pre>` : event.message;
+			}
 			break;
 
 		case 'socket-close':
@@ -104,4 +102,27 @@ const drawNode = (frame) => {
 	}
 
 	return node;
+};
+
+const calcuateBinaryHeight = (frame) => {
+	const lines = frame.event.lineNumbers.length;
+	const contentHeight = lines * charSize.height + frameHeightPadding;
+
+	frame._height = Math.max(contentHeight, frameMinHeight);
+};
+
+const calculateTextHeight = (frame) => {
+	let lines = 0;
+
+	if (! charSize.width) {
+		recalculateCharSize();
+	}
+
+	for (let i = 0; i < frame.event.lineLengths.length; i++) {
+		lines += Math.ceil(frame.event.lineLengths[i] / charSize.cols);
+	}
+
+	const contentHeight = lines * charSize.height + frameHeightPadding;
+
+	frame._height = Math.max(contentHeight, frameMinHeight);
 };
